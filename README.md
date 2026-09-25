@@ -1,7 +1,7 @@
-> [!IMPORTANT]
+\n> Legacy integrations using the original `aeris-tokens.*` hooks remain supported as compatibility aliases.\n\n> [!IMPORTANT]
 > This GitHub repository is a community-maintained **Foundry VTT v14** compatibility fork of the original [Aeris Tokens](https://gitlab.com/aeris-fvtt/aeris-tokens) project. The original author and MIT license are preserved.\n>\n> **Foundry manifest:** https://github.com/henriquebot/token-walk-animation/releases/latest/download/module.json\n\n<!-- docs:group:getting-started:start -->
 
-# Aeris Tokens
+# Token Walk Animation
 
 Dynamic movement range and path preview overlays for Foundry VTT. See exactly which tiles a token can reach as you drag, customise colors and hotkeys, and enjoy smooth, animated movement.
 
@@ -109,12 +109,12 @@ If you're building a system and want to integrate with these APIs easily, consid
 
 ---
 
-### `aeris-tokens.getMovementModes`
+### `token-walk-animation.getMovementModes`
 
 Allows systems or modules to specify which movement modes (e.g. `"walk"`, `"fly"`, `"swim"`) are available for a given actor.
 
 ```ts
-Hooks.on("aeris-tokens.getMovementModes", (actor: Actor, modes: string[]) => {
+Hooks.on("token-walk-animation.getMovementModes", (actor: Actor, modes: string[]) => {
     // Add movement modes that should be available for this actor
     if (actor.system.attributes.movement.fly > 0) {
         modes.push("fly");
@@ -135,12 +135,12 @@ Hooks.on("aeris-tokens.getMovementModes", (actor: Actor, modes: string[]) => {
 
 ---
 
-### `aeris-tokens.preGetMovementValue`
+### `token-walk-animation.preGetMovementValue`
 
 Allows you to override the movement rings shown for a given actor and movement mode. This hook is called per mode (e.g. `"walk"`, `"fly"`), and pushing entries into `ranges` replaces the module’s defaults.
 
 ```ts
-Hooks.on("aeris-tokens.preGetMovementValue", (actor, ranges, mode) => {
+Hooks.on("token-walk-animation.preGetMovementValue", (actor, ranges, mode) => {
     if (mode === "walk") {
         ranges.push({ value: 30, preset: "available" }); // 30 ft = 6 grid units (on 5 ft grid)
     }
@@ -187,12 +187,12 @@ interface MovementRange {
 
 ---
 
-### `aeris-tokens.resetMovement`
+### `token-walk-animation.resetMovement`
 
 Fires when movement-related state (e.g. dashing) should be reset - typically at the start of a new turn.
 
 ```ts
-Hooks.on("aeris-tokens.resetMovement", (actor: Actor) => {
+Hooks.on("token-walk-animation.resetMovement", (actor: Actor) => {
     actor.setFlag("my-module", "dashed", false);
 });
 ```
@@ -208,7 +208,7 @@ Hooks.on("aeris-tokens.resetMovement", (actor: Actor) => {
 
 ---
 
-### `aeris-tokens.getGridTravelSoundOverride`
+### `token-walk-animation.getGridTravelSoundOverride`
 
 Allows modules or systems to override the travel sound used when a token moves. Called during path playback, per movement mode and actor.
 
@@ -267,13 +267,13 @@ token.dragActionHandler?.refreshMovement();
     3. Clicking **"Install module"** at the top"
     4. The Manifest URL text box is at the bottom of the new window
 3. Click **install**. Install any other dependencies that are required.
-4. Open your world and activate the **Aeris Tokens** module.
+4. Open your world and activate the **Token Walk Animation** module.
 
 ---
 
 ## Compatibility
 
--   **Foundry VTT**: Version 14 (community compatibility build)
+-   **Foundry VTT**: Version 14.367+ (verified against 14.368)
 -   **Required Modules**:
 
     -   Aeris Core
@@ -368,12 +368,12 @@ If you want to use any Google Font for your distance labels, follow these steps:
     ```
 4.  **Paste into your module settings**
 
-    -   Go to Module Settings → Aeris Tokens → CSS @import for your font.
+    -   Go to Module Settings → Token Walk Animation → CSS @import for your font.
     -   Replace the default import with the line you copied above.
 
 5.  **Set the font-family name**
 
-    -   In Module Settings → Aeris Tokens → Font-Family name, enter the exact font name as shown on Google Fonts (e.g. Dancing Script).
+    -   In Module Settings → Token Walk Animation → Font-Family name, enter the exact font name as shown on Google Fonts (e.g. Dancing Script).
 
 Foundry will then fetch the new font and rebake it for you.
 If the font fails to load, you’ll see a warning and it will fall back to either the default (Cal Sans) or your system default.

@@ -1,3 +1,12 @@
+# 14.0.0-beta.3 — Token Walk Animation
+
+- Renamed the package ID from `aeris-tokens` to `token-walk-animation`.
+- Added one-time migration support for settings and movement-history flags saved under the old `aeris-tokens` namespace.
+- Preserved legacy `aeris-tokens.*` API hooks while adding the new `token-walk-animation.*` hook names.
+- Updated module asset/template paths for the new package folder.
+- Raised Foundry compatibility to 14.367+ and verified against 14.368 release/API notes.
+- Release ZIP is now `token-walk-animation.zip`.
+
 # v14 Community Beta 2
 
 - Fixed movement budget accumulation across multiple drags in one combat turn.

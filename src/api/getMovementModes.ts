@@ -1,8 +1,9 @@
-import { MODULE_ID } from "../constants";
+import { LEGACY_MODULE_ID, MODULE_ID } from "../constants";
 
 export function callGetMovementModes(actor: Actor): MovementMode[] {
     const unvalidated: unknown[] = [];
     Hooks.call(`${MODULE_ID}.getMovementModes`, actor, unvalidated);
+    Hooks.call(`${LEGACY_MODULE_ID}.getMovementModes`, actor, unvalidated);
     return validateMovementModes(unvalidated);
 }
 

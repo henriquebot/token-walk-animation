@@ -8,7 +8,7 @@ const DEFAULT_FONT_FAMILY = "Cal Sans";
 export function registerWorldFont() {
     game.settings?.register(MODULE_ID, "fontImport", {
         name: "CSS @import for your font",
-        hint: `e.g. "${DEFAULT_FONT_IMPORT}". See the README for more font‐import examples: https://gitlab.com/aeris-fvtt/aeris-tokens#custom-font-setup`,
+        hint: `e.g. "${DEFAULT_FONT_IMPORT}". See the README for more font‐import examples: https://github.com/henriquebot/token-walk-animation#custom-font-setup`,
         scope: "world",
         config: true,
         type: String,
@@ -36,7 +36,7 @@ export async function bakeFont() {
         const bitmapFont = PIXI?.BitmapFont as any;
         if (!bitmapFont?.from) {
             console.warn(
-                "Aeris Tokens | PIXI.BitmapFont.from is unavailable; distance labels will use the existing font cache."
+                "Token Walk Animation | PIXI.BitmapFont.from is unavailable; distance labels will use the existing font cache."
             );
             return;
         }
@@ -74,7 +74,7 @@ export async function bakeFont() {
             { chars: bitmapFont.ASCII }
         );
     } catch (error) {
-        console.warn("Aeris Tokens | Could not bake movement label font", error);
+        console.warn("Token Walk Animation | Could not bake movement label font", error);
     }
 }
 

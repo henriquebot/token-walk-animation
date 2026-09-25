@@ -25,7 +25,7 @@ export class ColorConfigMenu extends HandlebarsApplicationMixin(ApplicationV2<an
 
     static PARTS = {
         config: {
-            template: "modules/aeris-tokens/templates/colorConfigMenu.hbs"
+            template: "modules/token-walk-animation/templates/colorConfigMenu.hbs"
         },
         footer: {
             template: "templates/generic/form-footer.hbs",

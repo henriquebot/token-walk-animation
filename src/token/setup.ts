@@ -1,4 +1,4 @@
-import { MODULE_ID } from "../constants";
+import { LEGACY_MODULE_ID, MODULE_ID } from "../constants";
 import { getMovementSystemPath } from "../settings/movementPropertyPath";
 import { getGameInterfaceVolume } from "../utils/volume";
 import {
@@ -59,7 +59,10 @@ export function setupBuildReachablesOnMovementUpdate() {
 export function setupTokenHUDResetMovementBtn() {
     Hooks.on("renderTokenHUD", (hud: TokenHUD, html: HTMLElement, _data) => {
         const actor = (hud as any).actor as Actor;
-        const value = actor.flags?.["aeris-tokens"]?.distanceMoved ?? 0;
+        const value =
+            actor.flags?.[MODULE_ID]?.distanceMoved ??
+            actor.flags?.[LEGACY_MODULE_ID]?.distanceMoved ??
+            0;
         if (!value) return;
 
         const btn = $(
@@ -78,7 +81,7 @@ export function setupTokenHUDResetMovementBtn() {
     });
 }
 
-const POP_CLICK_AUDIO = "modules/aeris-tokens/assets/pop_ui_click.ogg";
+const POP_CLICK_AUDIO = "modules/token-walk-animation/assets/pop_ui_click.ogg";
 
 function resetCombatantMovement(combatant: Combatant | null | undefined) {
     const token = combatant?.token?.object as AerisToken | null | undefined;

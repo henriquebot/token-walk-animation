@@ -9,7 +9,7 @@ import {
     getMovementSystemPath,
 } from "../settings/movementPropertyPath";
 
-const README_URL = "https://gitlab.com/aeris-fvtt/aeris-tokens#troubleshooting";
+const README_URL = "https://github.com/henriquebot/token-walk-animation#troubleshooting";
 
 // scope here to only warn once per setting
 let warnedPath: string | null = null;

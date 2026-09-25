@@ -37,11 +37,7 @@ export function registerMovementMultiplier() {
 
 export function getMovementMultiplier() {
     if (!movementModifier) return 1;
-    return Number(
-        game.settings?.storage.get("client")?.[
-            "aeris-tokens.movementMultiplier"
-        ] ?? "2"
-    );
+    return Number(game.settings?.get(MODULE_ID, "movementMultiplier") ?? 2);
 }
 
 export function getBaseMovementOverride() {

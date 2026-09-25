@@ -22,7 +22,7 @@ const foundryModules =
               "modules"
           ));
 
-const moduleName = "aeris-tokens";
+const moduleName = "token-walk-animation";
 const modulePath = join(foundryModules, moduleName);
 
 async function main() {

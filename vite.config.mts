@@ -16,13 +16,13 @@ export default defineConfig(({ mode }) => {
                 ],
             }),
         ],
-        base: isDev ? `/modules/aeris-tokens/` : "./",
+        base: isDev ? `/modules/token-walk-animation/` : "./",
 
         server: isDev
             ? {
                   port: 30001,
                   proxy: {
-                      [`^/(?!modules/aeris-tokens)`]: "http://localhost:30000",
+                      [`^/(?!modules/token-walk-animation)`]: "http://localhost:30000",
                       "/socket.io": {
                           target: "ws://localhost:30000",
                           ws: true,

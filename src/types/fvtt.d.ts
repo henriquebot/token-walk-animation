@@ -5,6 +5,9 @@ import { CellRef } from "../wallIndex/wallIndexManager";
 declare module "fvtt-types/configuration" {
 	interface FlagConfig {
 		Actor: {
+			"token-walk-animation": {
+				distanceMoved: number;
+			};
 			"aeris-tokens": {
 				distanceMoved: number;
 			};
@@ -16,7 +19,7 @@ declare module "fvtt-types/configuration" {
 			"socketlib.ready": () => void;
 
 			/** Hook to override travel sound effect per grid type */
-			"aeris-tokens.getGridTravelSoundOverride": (
+			"token-walk-animation.getGridTravelSoundOverride": (
 				actor: Actor | undefined,
 				mode: string | undefined,
 				index: number | undefined,
@@ -24,16 +27,16 @@ declare module "fvtt-types/configuration" {
 			) => void;
 
 			/** Hook to override movement value */
-			"aeris-tokens.preGetMovementValue": (
+			"token-walk-animation.preGetMovementValue": (
 				actor: Actor,
 				apiOverride: UnvalidatedMovementRange[],
 				mode: MovementMode
 			) => void;
 
 			/** Called to reset movement tracking for an actor */
-			"aeris-tokens.resetMovement": (actor: Actor) => void;
+			"token-walk-animation.resetMovement": (actor: Actor) => void;
 
-			"aeris-tokens.getMovementModes": (
+			"token-walk-animation.getMovementModes": (
 				actor: Actor,
 				unvalidated: unknown[]
 			) => void;
@@ -49,87 +52,87 @@ declare module "fvtt-types/configuration" {
 	}
 
 	interface SettingConfig {
-		"aeris-tokens.moduleFunctionalityScopeOutOfCombat": MovementBehaviour;
-		"aeris-tokens.moduleFunctionalityScopeInCombat": MovementBehaviour;
+		"token-walk-animation.moduleFunctionalityScopeOutOfCombat": MovementBehaviour;
+		"token-walk-animation.moduleFunctionalityScopeInCombat": MovementBehaviour;
 
-		"aeris-tokens.uncapExploration": boolean;
+		"token-walk-animation.uncapExploration": boolean;
 
-		"aeris-tokens.movementDataPathSetting": string;
-		"aeris-tokens.flyMovementDataPathSetting": string;
-		"aeris-tokens.extendedMovementDataPathSetting": string;
-		"aeris-tokens.cameraPanPadding": number;
-		"aeris-tokens.moveCameraOnHold": boolean;
-		"aeris-tokens.enableGridPainting": boolean;
+		"token-walk-animation.movementDataPathSetting": string;
+		"token-walk-animation.flyMovementDataPathSetting": string;
+		"token-walk-animation.extendedMovementDataPathSetting": string;
+		"token-walk-animation.cameraPanPadding": number;
+		"token-walk-animation.moveCameraOnHold": boolean;
+		"token-walk-animation.enableGridPainting": boolean;
 
-		"aeris-tokens.gridActivePathColor": string;
-		"aeris-tokens.gridAvailableTilesColor": string;
-		"aeris-tokens.gridBonusTilesColor": string;
-		"aeris-tokens.gridInvalidTilesColor": string;
-		"aeris-tokens.gridUnreachableTilesColor": string;
+		"token-walk-animation.gridActivePathColor": string;
+		"token-walk-animation.gridAvailableTilesColor": string;
+		"token-walk-animation.gridBonusTilesColor": string;
+		"token-walk-animation.gridInvalidTilesColor": string;
+		"token-walk-animation.gridUnreachableTilesColor": string;
 
-		"aeris-tokens.gridStrokeColor": string;
-		"aeris-tokens.gridAccentColor": string;
-		"aeris-tokens.gridTextColor": string;
-		"aeris-tokens.showOthersGridPaths": boolean;
-		"aeris-tokens.othersGridAlphaMultiplier": number;
+		"token-walk-animation.gridStrokeColor": string;
+		"token-walk-animation.gridAccentColor": string;
+		"token-walk-animation.gridTextColor": string;
+		"token-walk-animation.showOthersGridPaths": boolean;
+		"token-walk-animation.othersGridAlphaMultiplier": number;
 
 		// Audio
-		"aeris-tokens.gridSelectSound": string;
-		"aeris-tokens.enableGridSelectSound": boolean;
-		"aeris-tokens.gridTravelSound": string;
-		"aeris-tokens.enableGridTravelSound": boolean;
+		"token-walk-animation.gridSelectSound": string;
+		"token-walk-animation.enableGridSelectSound": boolean;
+		"token-walk-animation.gridTravelSound": string;
+		"token-walk-animation.enableGridTravelSound": boolean;
 
-		"aeris-tokens.enableDistanceLabelToken": boolean;
+		"token-walk-animation.enableDistanceLabelToken": boolean;
 
-		"aeris-tokens.fontImport": string;
-		"aeris-tokens.fontFamily": string;
-		"aeris-tokens.movementMultiplier": number;
-		"aeris-tokens.baseMovementOverride": number;
+		"token-walk-animation.fontImport": string;
+		"token-walk-animation.fontFamily": string;
+		"token-walk-animation.movementMultiplier": number;
+		"token-walk-animation.baseMovementOverride": number;
 
-		"aeris-tokens.scaleJumpFactor": number;
-		"aeris-tokens.tokenMoveSpeed": number;
+		"token-walk-animation.scaleJumpFactor": number;
+		"token-walk-animation.tokenMoveSpeed": number;
 
 		"core.gridDiagonals": CONST.GRID_DIAGONALS;
 
-		"aeris-tokens.allowPathBeyondRange": boolean;
+		"token-walk-animation.allowPathBeyondRange": boolean;
 
-		"aeris-tokens.enableCombatMovementHistory": boolean;
+		"token-walk-animation.enableCombatMovementHistory": boolean;
 
 		"core.tokenAutoRotate": boolean;
-		"aeris-tokens.autoPath": boolean;
+		"token-walk-animation.autoPath": boolean;
 
-		"aeris-tokens.enableOthersPreview": boolean;
+		"token-walk-animation.enableOthersPreview": boolean;
 	}
 	interface Storage {
 		"core.globalInterfaceVolume": number;
 
 		//Audio
-		"aeris-tokens.gridSelectSound": string;
-		"aeris-tokens.enableGridSelectSound": boolean;
-		"aeris-tokens.gridTravelSound": string;
-		"aeris-tokens.enableGridTravelSound": boolean;
+		"token-walk-animation.gridSelectSound": string;
+		"token-walk-animation.enableGridSelectSound": boolean;
+		"token-walk-animation.gridTravelSound": string;
+		"token-walk-animation.enableGridTravelSound": boolean;
 
-		"aeris-tokens.enableDistanceLabelToken": boolean;
+		"token-walk-animation.enableDistanceLabelToken": boolean;
 
-		"aeris-tokens.movementMultiplier": number;
-		"aeris-tokens.baseMovementOverride": number;
+		"token-walk-animation.movementMultiplier": number;
+		"token-walk-animation.baseMovementOverride": number;
 
-		"aeris-tokens.allowPathBeyondRange": boolean;
+		"token-walk-animation.allowPathBeyondRange": boolean;
 	}
 	interface WorldSettings {
 		"core.globalInterfaceVolume": number;
 
 		//Audio
-		"aeris-tokens.gridSelectSound": string;
-		"aeris-tokens.enableGridSelectSound": boolean;
-		"aeris-tokens.gridTravelSound": string;
-		"aeris-tokens.enableGridTravelSound": boolean;
+		"token-walk-animation.gridSelectSound": string;
+		"token-walk-animation.enableGridSelectSound": boolean;
+		"token-walk-animation.gridTravelSound": string;
+		"token-walk-animation.enableGridTravelSound": boolean;
 
-		"aeris-tokens.enableDistanceLabelToken": boolean;
+		"token-walk-animation.enableDistanceLabelToken": boolean;
 
-		"aeris-tokens.movementMultiplier": number;
-		"aeris-tokens.baseMovementOverride": number;
-		"aeris-tokens.allowPathBeyondRange": boolean;
+		"token-walk-animation.movementMultiplier": number;
+		"token-walk-animation.baseMovementOverride": number;
+		"token-walk-animation.allowPathBeyondRange": boolean;
 	}
 
 	interface PlaceableObjectClassConfig {

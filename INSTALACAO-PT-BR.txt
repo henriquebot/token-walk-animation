@@ -1,10 +1,10 @@
-AERIS TOKENS — V14 COMMUNITY BETA 2
+TOKEN WALK ANIMATION — V14 COMMUNITY BETA 3
 
 1. Feche o Foundry VTT.
-2. Apague ou renomeie a pasta antiga Data/modules/aeris-tokens.
+2. Apague ou renomeie a pasta antiga Data/modules/token-walk-animation.
 3. Extraia este ZIP dentro de Data/modules.
-4. Confirme que existe Data/modules/aeris-tokens/module.json.
-5. Abra o Foundry e ative libWrapper, socketlib e Aeris Tokens.
+4. Confirme que existe Data/modules/token-walk-animation/module.json.
+5. Abra o Foundry e ative libWrapper, socketlib e Token Walk Animation.
 
 CORREÇÕES DESTA VERSÃO
 - O movimento gasto acumula entre vários arrastes no mesmo turno.

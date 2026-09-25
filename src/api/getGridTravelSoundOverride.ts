@@ -1,4 +1,4 @@
-import { MODULE_ID } from "../constants";
+import { LEGACY_MODULE_ID, MODULE_ID } from "../constants";
 
 let _warnedInvalidSoundOverride = false;
 
@@ -10,6 +10,13 @@ export function callGetGridTravelSoundOverride(
 	const unvalidated: unknown[] = [];
 	Hooks.call(
 		`${MODULE_ID}.getGridTravelSoundOverride`,
+		actor,
+		mode,
+		index,
+		unvalidated
+	);
+	Hooks.call(
+		`${LEGACY_MODULE_ID}.getGridTravelSoundOverride`,
 		actor,
 		mode,
 		index,

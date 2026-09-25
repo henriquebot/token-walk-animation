@@ -43,7 +43,7 @@ export class DragActionHandler {
             .update({ movementAction: mode })
             .catch((error) =>
                 console.warn(
-                    "Aeris Tokens | Could not persist movement action",
+                    "Token Walk Animation | Could not persist movement action",
                     error
                 )
             );

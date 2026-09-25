@@ -1,5 +1,5 @@
 import { callResetMovement } from "../../api/resetMovement";
-import { MODULE_ID } from "../../constants";
+import { LEGACY_MODULE_ID, MODULE_ID } from "../../constants";
 import { isCombatMovementHistoryForTokenEnabled } from "../../settings/movementHistory";
 import { AerisToken } from "../aerisToken";
 
@@ -17,7 +17,9 @@ export class MovementBudgetContext {
         }
 
         const stored =
-            this.token.actor?.flags?.[MODULE_ID]?.distanceMoved ?? 0;
+            this.token.actor?.flags?.[MODULE_ID]?.distanceMoved ??
+            this.token.actor?.flags?.[LEGACY_MODULE_ID]?.distanceMoved ??
+            0;
 
         if (this.optimisticDistanceMoved === null) return stored;
 

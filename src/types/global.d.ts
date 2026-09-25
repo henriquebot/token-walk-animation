@@ -19,6 +19,8 @@ declare global {
     };
     interface GlobalThis {
         socketlib: SocketLib;
+        tokenWalkAnimation?: unknown;
+        aerisTokens?: unknown;
         aerisCinema: typeof aerisCinema;
         aerisCore: typeof aerisCore;
     }

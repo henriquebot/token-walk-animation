@@ -4,7 +4,7 @@ import ts from 'typescript';
 
 const root = process.argv[2] ? path.resolve(process.argv[2]) : process.cwd();
 const outRoot = process.argv[3] ? path.resolve(process.argv[3]) : path.join(root, 'build-module');
-const out = path.join(outRoot, 'aeris-tokens');
+const out = path.join(outRoot, 'token-walk-animation');
 fs.rmSync(outRoot,{recursive:true,force:true});
 fs.mkdirSync(out,{recursive:true});
 
@@ -47,6 +47,6 @@ walk(srcRoot);
 const manifest=JSON.parse(fs.readFileSync(path.join(root,'module.json'),'utf8'));
 manifest.url='https://github.com/henriquebot/token-walk-animation';
 manifest.manifest='https://github.com/henriquebot/token-walk-animation/releases/latest/download/module.json';
-manifest.download='https://github.com/henriquebot/token-walk-animation/releases/latest/download/aeris-tokens.zip';
+manifest.download='https://github.com/henriquebot/token-walk-animation/releases/latest/download/token-walk-animation.zip';
 fs.writeFileSync(path.join(out,'module.json'),JSON.stringify(manifest,null,2)+'\n');
 console.log(`Built ${out}`);

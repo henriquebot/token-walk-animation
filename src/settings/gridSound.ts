@@ -7,15 +7,15 @@ import {
 
 export const ENABLE_GRID_SELECT_SOUND = "enableGridSelectSound";
 export const GRID_SELECT_SOUND = "gridSelectSound";
-export const DEFAULT_GRID_SELECT_AUDIO = "modules/aeris-tokens/assets/menu.ogg";
+export const DEFAULT_GRID_SELECT_AUDIO = "modules/token-walk-animation/assets/menu.ogg";
 
 export const ENABLE_GRID_TRAVEL_SOUND = "enableGridTravelSound";
 export const GRID_TRAVEL_SOUND = "gridTravelSound";
 export const DEFAULT_GRID_TRAVEL_SOUND_WILDCARD =
-    "modules/aeris-tokens/assets/sfx_step_grass_*";
+    "modules/token-walk-animation/assets/sfx_step_grass_*";
 
 export const DEFAULT_GRID_TRAVEL_SOUND =
-    "modules/aeris-tokens/assets/sfx_step_grass_l.ogg";
+    "modules/token-walk-animation/assets/sfx_step_grass_l.ogg";
 
 export function registerGridMovementSoundSetting() {
     game.settings?.register(MODULE_ID, ENABLE_GRID_SELECT_SOUND, {
@@ -29,7 +29,7 @@ export function registerGridMovementSoundSetting() {
 
     game.settings?.register(MODULE_ID, GRID_SELECT_SOUND, {
         name: "Grid Selection Sound",
-        hint: "Sound played when selecting a grid destination. Choose from the 'modules/aeris-tokens/assets/' folder or select your own.",
+        hint: "Sound played when selecting a grid destination. Choose from the 'modules/token-walk-animation/assets/' folder or select your own.",
         scope: "client",
         config: true,
         default: DEFAULT_GRID_SELECT_AUDIO,
@@ -49,7 +49,7 @@ export function registerGridMovementSoundSetting() {
 
     game.settings?.register(MODULE_ID, GRID_TRAVEL_SOUND, {
         name: "Grid Travel Sound",
-        hint: "Sound played during token movement. Choose from the 'modules/aeris-tokens/assets/' folder or select your own. Can include wildcards like *.ogg.",
+        hint: "Sound played during token movement. Choose from the 'modules/token-walk-animation/assets/' folder or select your own. Can include wildcards like *.ogg.",
         scope: "client",
         config: true,
         default: DEFAULT_GRID_TRAVEL_SOUND_WILDCARD,
@@ -80,11 +80,7 @@ export function setupWarmGridTravelCacheOnLogin() {
 }
 
 export function isGridSelectSoundEnabled(): boolean {
-    return (
-        game.settings?.storage.get("client")?.[
-            `${MODULE_ID}.${ENABLE_GRID_SELECT_SOUND}`
-        ] !== "false"
-    );
+    return game.settings?.get(MODULE_ID, ENABLE_GRID_SELECT_SOUND) ?? true;
 }
 
 export function isGridTravelSoundEnable(): boolean {
@@ -92,14 +88,10 @@ export function isGridTravelSoundEnable(): boolean {
 }
 
 export function getGridSelectSound(): string {
-    const value =
-        game.settings?.storage.get("client")?.[
-            `${MODULE_ID}.${GRID_SELECT_SOUND}`
-        ];
-
-    return typeof value === "string"
-        ? value.replace(/^"(.*)"$/, "$1")
-        : DEFAULT_GRID_SELECT_AUDIO;
+    return (
+        (game.settings?.get(MODULE_ID, GRID_SELECT_SOUND) as string | undefined) ??
+        DEFAULT_GRID_SELECT_AUDIO
+    );
 }
 
 export function getGridTravelSound(

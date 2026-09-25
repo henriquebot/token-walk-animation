@@ -1,7 +1,7 @@
-import "http://localhost:30001/modules/aeris-tokens/@vite/client";
+import "http://localhost:30001/modules/token-walk-animation/@vite/client";
 
 window.$RefreshReg$ = () => {};
 window.$RefreshSig$ = () => (type) => type;
 window.global = window;
 
-import("http://localhost:30001/modules/aeris-tokens/src/main.ts");
+import("http://localhost:30001/modules/token-walk-animation/src/main.ts");

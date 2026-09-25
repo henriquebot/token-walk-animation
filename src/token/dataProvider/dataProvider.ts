@@ -41,7 +41,7 @@ function getSelectableCoreMovementModes(
                     : canSelect !== false;
             } catch (error) {
                 console.warn(
-                    "Aeris Tokens | Could not evaluate movement action",
+                    "Token Walk Animation | Could not evaluate movement action",
                     error
                 );
                 return false;

@@ -1,10 +1,10 @@
-# Aeris Tokens — Foundry VTT v14 Community Beta 2
+# Token Walk Animation — Foundry VTT v14 Community Beta 3
 
 This is an **unofficial compatibility build** prepared from the original MIT-licensed Aeris Tokens source. It is not an official release by the original author.
 
 ## Target
 
-- Foundry VTT 14.365
+- Foundry VTT 14.367+ (verified 14.368)
 - Required: libWrapper 1.13.5.1 or newer
 - Required: socketlib 1.1.4 or newer
 - Aeris Core and Color Picker are optional
@@ -23,10 +23,10 @@ This is an **unofficial compatibility build** prepared from the original MIT-lic
 
 1. Back up the world.
 2. Close Foundry.
-3. Replace the existing `Data/modules/aeris-tokens/` folder with this version.
-4. Start Foundry and enable libWrapper, socketlib, and Aeris Tokens.
+3. Replace the existing `Data/modules/token-walk-animation/` folder with this version.
+4. Start Foundry and enable libWrapper, socketlib, and Token Walk Animation.
 5. Test in a copied world before using it in a live session.
 
 ## Useful report
 
-After reproducing an error, press F12, open Console, and copy the first red stack trace mentioning `aeris-tokens`.
+After reproducing an error, press F12, open Console, and copy the first red stack trace mentioning `token-walk-animation`.

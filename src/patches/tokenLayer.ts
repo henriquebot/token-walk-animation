@@ -1,6 +1,6 @@
 export function patchTokenLayer() {
     libWrapper.register(
-        "aeris-tokens",
+        "token-walk-animation",
         "foundry.canvas.layers.TokenLayer.prototype._onCycleViewKey",
         function (this: TokenLayer, wrapped, event) {
             const handled = wrapped.call(this, event);

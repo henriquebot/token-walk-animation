@@ -1,4 +1,4 @@
-import { MODULE_ID } from "../constants";
+import { LEGACY_MODULE_ID, MODULE_ID } from "../constants";
 import { getGridColorConfig } from "../settings/gridColor";
 
 type MovementStylePreset = "available" | "bonus";
@@ -16,6 +16,7 @@ export function callPreGetMovementValue(
 ): MovementRange[] | null {
     const apiOverride: UnvalidatedMovementRange[] = [];
     Hooks.call(`${MODULE_ID}.preGetMovementValue`, actor, apiOverride, mode);
+    Hooks.call(`${LEGACY_MODULE_ID}.preGetMovementValue`, actor, apiOverride, mode);
     const validated = validateOverride(apiOverride);
     if (!validated.length) return null;
 

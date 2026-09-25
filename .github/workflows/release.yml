@@ -31,15 +31,15 @@ jobs:
       - name: Build Foundry v14 package
         run: |
           node scripts/build-v14.mjs . build-module
-          (cd build-module && zip -qr ../aeris-tokens.zip aeris-tokens)
+          (cd build-module && zip -qr ../token-walk-animation.zip token-walk-animation)
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: aeris-tokens-v14
+          name: token-walk-animation-v14
           path: |
-            aeris-tokens.zip
-            build-module/aeris-tokens/module.json
+            token-walk-animation.zip
+            build-module/token-walk-animation/module.json
 
       - name: Publish version release
         env:
@@ -51,9 +51,9 @@ jobs:
           TAG="v$VERSION"
 
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" aeris-tokens.zip build-module/aeris-tokens/module.json --clobber
+            gh release upload "$TAG" token-walk-animation.zip build-module/token-walk-animation/module.json --clobber
           else
-            gh release create "$TAG" aeris-tokens.zip build-module/aeris-tokens/module.json \
-              --title "Aeris Tokens $VERSION — Foundry v14" \
-              --notes "Community-maintained Foundry VTT v14 compatibility build based on the original MIT-licensed Aeris Tokens project."
+            gh release create "$TAG" token-walk-animation.zip build-module/token-walk-animation/module.json \
+              --title "Token Walk Animation $VERSION — Foundry v14" \
+              --notes "Community-maintained Foundry VTT v14.367+ continuation of the original MIT-licensed Aeris Tokens project."
           fi

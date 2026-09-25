@@ -7,6 +7,7 @@ import { benchmarkLightPolygonComputation } from "./api/benchmark/benchmarkPolyg
 import { quickBenchmarkReachableTiles } from "./api/benchmark/benchmarkReachables";
 import { benchmarkVisionPolygon } from "./api/benchmark/benchmarkVisionPolygon";
 import { compatibilityCheck } from "./compatibility";
+import { migrateLegacyAerisNamespace } from "./migrateLegacyNamespace";
 import { LocalSweepPolygon } from "./localSweepPolygon";
 import { navGrid } from "./navGrid/navGrid";
 import { setupNavGridBuild } from "./navGrid/setup";
@@ -59,8 +60,7 @@ Hooks.on("ready", () => {
     // @ts-expect-error untyped
     globalThis.LocalSweepPolygon = LocalSweepPolygon;
 
-    // @ts-expect-error untyped
-    globalThis.aerisTokens = {
+    const api = {
         MinHeap,
         quickBenchmarkIsLegalStep,
         quickBenchmarkReachableTiles,
@@ -77,9 +77,14 @@ Hooks.on("ready", () => {
         navGrid,
         getRowsCol,
     };
+
+    // New public name plus the original global alias for backwards compatibility.
+    (globalThis as any).tokenWalkAnimation = api;
+    (globalThis as any).aerisTokens = api;
 });
 
 Hooks.on("ready", async () => {
+    await migrateLegacyAerisNamespace();
     await migrateMovementHistoryDefault();
     warmGridTravelCache();
     setupWarmGridTravelCacheOnLogin();
@@ -89,8 +94,8 @@ Hooks.on("ready", async () => {
 Hooks.on("ready", () => {
     // Aeris Core is optional in this community v14 compatibility build.
     try {
-        (globalThis as any).aerisCore?.docs?.registerDocsMenu?.("aeris-tokens");
+        (globalThis as any).aerisCore?.docs?.registerDocsMenu?.("token-walk-animation");
     } catch (error) {
-        console.warn("Aeris Tokens | Aeris Core documentation menu unavailable", error);
+        console.warn("Token Walk Animation | Aeris Core documentation menu unavailable", error);
     }
 });

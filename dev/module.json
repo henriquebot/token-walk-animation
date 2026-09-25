@@ -1,12 +1,15 @@
 {
-    "id": "aeris-tokens",
-    "title": "Aeris Tokens (Dev)",
+    "id": "token-walk-animation",
+    "title": "Token Walk Animation (Dev)",
     "description": "Adds animation",
     "version": "0.0.0-dev",
-    "esmodules": ["http://localhost:30001/modules/aeris-tokens/src/index.js"],
+    "esmodules": [
+        "http://localhost:30001/modules/token-walk-animation/src/index.js"
+    ],
     "compatibility": {
-        "minimum": "13",
-        "verified": "13"
+        "minimum": "14.367",
+        "verified": "14.368",
+        "maximum": "14"
     },
     "authors": [
         {
@@ -18,36 +21,18 @@
     "relationships": {
         "requires": [
             {
-                "id": "aeris-core",
-                "type": "module",
-                "manifest": "https://aeris-fvtt.gitlab.io/aeris-core/v13/module.json"
-            },
-            {
                 "id": "socketlib",
                 "type": "module",
-                "compatibility": {}
+                "compatibility": {
+                    "minimum": "1.1.4"
+                }
             },
             {
                 "id": "lib-wrapper",
                 "type": "module",
-                "compatibility": {}
-            },
-            {
-                "id": "color-picker",
-                "type": "module",
                 "compatibility": {
-                    "minimum": "1.5"
+                    "minimum": "1.13.5.1"
                 }
-            }
-        ],
-        "recommends": [
-            {
-                "id": "aeris-cinematic-view",
-                "type": "module",
-                "compatibility": {
-                    "minimum": "0.0.15"
-                },
-                "manifest": "https://aeris-fvtt.gitlab.io/aeris-cinematic-view/module.json"
             }
         ]
     },

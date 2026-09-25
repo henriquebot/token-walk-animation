@@ -17,11 +17,11 @@ function buildGroupContent(group) {
             let content = fs.readFileSync(filePath, "utf8").trim();
             content = content
                 .replace(
-                    /\]\(modules\/aeris-tokens\/examples\//g,
+                    /\]\(modules\/token-walk-animation\/examples\//g,
                     "](examples/"
                 )
                 .replace(
-                    /src=(["'])modules\/aeris-tokens\/examples\//g,
+                    /src=(["'])modules\/token-walk-animation\/examples\//g,
                     "src=$1examples/"
                 )
                 .replace(
