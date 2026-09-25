@@ -1,0 +1,57 @@
+{
+    "id": "aeris-tokens",
+    "title": "Aeris Tokens (Dev)",
+    "description": "Adds animation",
+    "version": "0.0.0-dev",
+    "esmodules": ["http://localhost:30001/modules/aeris-tokens/src/index.js"],
+    "compatibility": {
+        "minimum": "13",
+        "verified": "13"
+    },
+    "authors": [
+        {
+            "name": "Robin Chand",
+            "discord": "robxnlifts",
+            "flags": {}
+        }
+    ],
+    "relationships": {
+        "requires": [
+            {
+                "id": "aeris-core",
+                "type": "module",
+                "manifest": "https://aeris-fvtt.gitlab.io/aeris-core/v13/module.json"
+            },
+            {
+                "id": "socketlib",
+                "type": "module",
+                "compatibility": {}
+            },
+            {
+                "id": "lib-wrapper",
+                "type": "module",
+                "compatibility": {}
+            },
+            {
+                "id": "color-picker",
+                "type": "module",
+                "compatibility": {
+                    "minimum": "1.5"
+                }
+            }
+        ],
+        "recommends": [
+            {
+                "id": "aeris-cinematic-view",
+                "type": "module",
+                "compatibility": {
+                    "minimum": "0.0.15"
+                },
+                "manifest": "https://aeris-fvtt.gitlab.io/aeris-cinematic-view/module.json"
+            }
+        ]
+    },
+    "manifest": "",
+    "socket": true,
+    "flags": {}
+}

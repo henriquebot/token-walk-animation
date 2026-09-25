@@ -1,0 +1,11 @@
+node_modules
+pnpm-lock.yaml
+dist
+testing
+.env
+package-lock.json
+/src/.vscode
+
+dev/assets
+dev/docs
+dev/templates
