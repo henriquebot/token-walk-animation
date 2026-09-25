@@ -8,8 +8,13 @@ import {
     getDefaultPath,
     getMovementSystemPath,
 } from "../settings/movementPropertyPath";
+import {
+    getAgnosticBaseMovement,
+    getSystemIntegrationProfile,
+} from "../settings/systemIntegration";
 
-const README_URL = "https://github.com/henriquebot/token-walk-animation#troubleshooting";
+const README_URL =
+    "https://github.com/henriquebot/token-walk-animation#troubleshooting";
 
 let warnedPath: string | null = null;
 
@@ -41,70 +46,118 @@ export function getMovementValue(
     mode: MovementMode
 ): MovementRange[] {
     if (actor === null) return [];
+
     const override = callPreGetMovementValue(actor, mode);
     if (override) return override;
 
     const { available, bonus } = getGridColorConfig();
 
-    const baseOverride = getBaseMovementOverride();
-    if (baseOverride)
-        return [
-            { value: baseOverride, rgb: available.rgb, a: available.alpha },
-        ];
-
-    const movementPathSetting = getMovementSystemPath(actor);
-    const movementValue = resolveMovementValue(
-        actor,
-        movementPathSetting,
-        String(mode)
-    );
-
-    if (typeof movementValue !== "number") {
-        // If walking speed can be resolved, the configured schema is valid and
-        // this particular movement action simply is not available to the Actor.
-        const walkValue = resolveMovementValue(actor, movementPathSetting, "walk");
-        if (typeof walkValue === "number" && walkValue > 0) return [];
-
-        if (warnedPath !== movementPathSetting) {
-            warnedPath = movementPathSetting as string;
-            ui.notifications?.warn(
-                `Please select a valid data path for movement for your system's actors, i.e. "${getDefaultPath()}".<br>
-                    If you need help, please see the <a href="${README_URL}" target="_blank" rel="noopener">
-                    Troubleshooting section of the README.
-                </a>.`
-            );
-        }
-        return [
-            {
-                value: 6,
-                rgb: available.rgb,
-                a: available.alpha,
-            },
-        ];
+    // Kept as the highest-priority compatibility override from earlier builds.
+    const baseOverride = Number(getBaseMovementOverride());
+    if (Number.isFinite(baseOverride) && baseOverride > 0) {
+        return buildRanges(baseOverride, available, bonus);
     }
 
-    if (!Number.isFinite(movementValue) || movementValue <= 0) return [];
+    const profile = getSystemIntegrationProfile();
 
-    const ranges = [
+    // LitM/Mist Engine intentionally has no D&D-style speed characteristic.
+    // System Agnostic uses the same rule: a configurable number of grid cells.
+    if (profile === "litm" || profile === "agnostic") {
+        const gridDistance = Number(canvas?.grid?.distance ?? 1) || 1;
+        const value = getAgnosticBaseMovement() * gridDistance;
+        return buildRanges(value, available, bonus);
+    }
+
+    let movementValue: number | undefined;
+    let movementPathSetting: string | number | undefined;
+
+    if (profile === "dnd5e") {
+        movementValue = resolveDnd5eMovementValue(actor, String(mode));
+    } else {
+        movementPathSetting = getMovementSystemPath(actor);
+        movementValue = resolveCustomMovementValue(
+            actor,
+            movementPathSetting,
+            String(mode)
+        );
+    }
+
+    if (typeof movementValue !== "number") {
+        // A valid walking speed means this particular movement mode simply
+        // does not exist for the Actor. Do not show a false path warning.
+        const walkValue =
+            profile === "dnd5e"
+                ? resolveDnd5eMovementValue(actor, "walk")
+                : resolveCustomMovementValue(
+                      actor,
+                      movementPathSetting!,
+                      "walk"
+                  );
+
+        if (typeof walkValue === "number" && walkValue > 0) return [];
+
+        // D&D5e integration should not ask the user for a custom dot-path.
+        if (profile === "dnd5e") {
+            if (warnedPath !== "dnd5e") {
+                warnedPath = "dnd5e";
+                ui.notifications?.warn(
+                    "Token Walk Animation could not find a D&D5e movement speed on this Actor. You can switch System Integration to System Agnostic for a fixed movement budget."
+                );
+            }
+            return [];
+        }
+
+        const warnKey = String(movementPathSetting ?? "");
+        if (warnedPath !== warnKey) {
+            warnedPath = warnKey;
+            ui.notifications?.warn(
+                `Please select a valid custom movement data path for this system, e.g. "${getDefaultPath()}".<br>
+                    Or set <strong>System Integration</strong> to <strong>System Agnostic</strong>.<br>
+                    <a href="${README_URL}" target="_blank" rel="noopener">Troubleshooting section of the README</a>.`
+            );
+        }
+        return [];
+    }
+
+    return buildRanges(movementValue, available, bonus);
+}
+
+function buildRanges(
+    value: number,
+    available: { rgb: number; alpha: number },
+    bonus: { rgb: number; alpha: number }
+): MovementRange[] {
+    if (!Number.isFinite(value) || value <= 0) return [];
+
+    const ranges: MovementRange[] = [
         {
-            value: movementValue,
+            value,
             rgb: available.rgb,
             a: available.alpha,
         },
     ];
 
     const movementMultiplier = getMovementMultiplier();
-    if (movementMultiplier > 1)
+    if (movementMultiplier > 1) {
         ranges.push({
-            value: movementValue * movementMultiplier,
+            value: value * movementMultiplier,
             rgb: bonus.rgb,
             a: bonus.alpha,
         });
+    }
 
     return ranges;
 }
 
-function readNumericMovementValue(actor: Actor, path: string): number | undefined {
+function normalizeMode(rawMode: string): string {
+    const value = rawMode.toLowerCase();
+    return MODE_ALIASES[value] ?? value;
+}
+
+function readNumericMovementValue(
+    actor: Actor,
+    path: string
+): number | undefined {
     const value = foundry.utils.getProperty(actor, path);
 
     if (typeof value === "object" && value !== null) {
@@ -116,7 +169,41 @@ function readNumericMovementValue(actor: Actor, path: string): number | undefine
     return Number.isFinite(numeric) && numeric > 0 ? numeric : undefined;
 }
 
-function movementCandidates(
+function dnd5eCandidates(normalMode: string): string[] {
+    const candidates = [
+        `system.attributes.movement.speeds.${normalMode}`,
+        `system.attributes.movement.${normalMode}`,
+    ];
+
+    if (normalMode === "walk") {
+        candidates.push("system.attributes.movement.speed");
+    }
+
+    return candidates;
+}
+
+function resolveDnd5eMovementValue(
+    actor: Actor,
+    rawMode: string
+): number | undefined {
+    const normalMode = normalizeMode(rawMode);
+
+    for (const path of dnd5eCandidates(normalMode)) {
+        const numeric = readNumericMovementValue(actor, path);
+        if (numeric !== undefined) return numeric;
+    }
+
+    if (WALK_DERIVED_MODES.has(normalMode)) {
+        for (const path of dnd5eCandidates("walk")) {
+            const numeric = readNumericMovementValue(actor, path);
+            if (numeric !== undefined) return numeric;
+        }
+    }
+
+    return undefined;
+}
+
+function customCandidates(
     movementPathSetting: string,
     normalMode: string
 ): string[] {
@@ -125,24 +212,15 @@ function movementCandidates(
     if (normalMode === "walk") candidates.push(movementPathSetting);
 
     if (/\.walk$/i.test(movementPathSetting)) {
-        candidates.push(movementPathSetting.replace(/\.walk$/i, `.${normalMode}`));
-    }
-
-    // D&D5e 6.x schema.
-    candidates.push(`system.attributes.movement.speeds.${normalMode}`);
-
-    // D&D5e <=5.x and other systems using the old flat movement object.
-    candidates.push(`system.attributes.movement.${normalMode}`);
-
-    if (normalMode === "walk") {
-        // Compatibility alias used by some D&D5e data/roll contexts.
-        candidates.push("system.attributes.movement.speed");
+        candidates.push(
+            movementPathSetting.replace(/\.walk$/i, `.${normalMode}`)
+        );
     }
 
     return Array.from(new Set(candidates));
 }
 
-function resolveMovementValue(
+function resolveCustomMovementValue(
     actor: Actor,
     movementPathSetting: string | number,
     rawMode: string
@@ -150,16 +228,15 @@ function resolveMovementValue(
     if (typeof movementPathSetting === "number") return movementPathSetting;
     if (!movementPathSetting.length) return undefined;
 
-    const normalMode =
-        MODE_ALIASES[rawMode.toLowerCase()] ?? rawMode.toLowerCase();
+    const normalMode = normalizeMode(rawMode);
 
-    for (const path of movementCandidates(movementPathSetting, normalMode)) {
+    for (const path of customCandidates(movementPathSetting, normalMode)) {
         const numeric = readNumericMovementValue(actor, path);
         if (numeric !== undefined) return numeric;
     }
 
     if (WALK_DERIVED_MODES.has(normalMode)) {
-        for (const path of movementCandidates(movementPathSetting, "walk")) {
+        for (const path of customCandidates(movementPathSetting, "walk")) {
             const numeric = readNumericMovementValue(actor, path);
             if (numeric !== undefined) return numeric;
         }
@@ -174,7 +251,10 @@ export function movementRangesEqual(
 ): boolean {
     if (a.length !== b.length) return false;
     return a.every(
-        (r, i) => r.value === b[i].value && r.rgb === b[i].rgb && r.a === b[i].a
+        (r, i) =>
+            r.value === b[i].value &&
+            r.rgb === b[i].rgb &&
+            r.a === b[i].a
     );
 }
 

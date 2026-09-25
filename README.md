@@ -1,6 +1,6 @@
 <!-- docs:group:getting-started:start -->
 
-# Aeris Tokens
+# Token Walk Animation
 
 Dynamic movement range and path preview overlays for Foundry VTT. See exactly which tiles a token can reach as you drag, customise colors and hotkeys, and enjoy smooth, animated movement.
 
@@ -274,6 +274,18 @@ token.dragActionHandler?.refreshMovement();
 
 Token Walk Animation can follow the active token without Aeris Cinematic View. Enable **Follow Token Camera** to pan as the token approaches the edge of the viewport. **Smooth Camera Movement** preserves the current zoom while easing the camera toward the token; **Camera Follow Smoothing** controls the catch-up duration.
 
+## System Integration Profiles
+
+Token Walk Animation can work without knowing anything about the active game system.
+
+- **Auto-detect**: D&D5e uses Actor movement speeds; known Legend in the Mist / Mist Engine systems use the LitM profile; other systems fall back to System Agnostic.
+- **System Agnostic**: uses a configurable movement budget in grid spaces and never reads Actor speed fields.
+- **D&D 5e**: reads walk/fly/swim/climb/burrow speeds from current or legacy D&D5e Actor data.
+- **Legend in the Mist / Mist Engine**: uses the configurable **Agnostic / LitM Base Movement** because LitM Actors do not define a D&D-style speed statistic.
+- **Custom Actor Data Path**: reads a numeric dot-path for systems that expose their own speed field.
+
+For LitM, leave **System Integration** on **Auto-detect** or explicitly choose **Legend in the Mist / Mist Engine**, then set **Agnostic / LitM Base Movement** to the number of grid spaces you want.
+
 ## Compatibility
 
 -   **Foundry VTT**: Version 14.367+ (verified 14.368)
@@ -323,17 +335,14 @@ The original files were converted to .ogg format for use in this module.
 
 ### Movement Path
 
-Aeris Tokens needs a **data path** (dot-path) to your actor’s movement value in its data. This is the field it reads to determine how far your token can move.
+Movement range depends on the selected **System Integration** profile.
 
-Below are the built-in defaults for common systems:
+- **System Agnostic / LitM**: set **Agnostic / LitM Base Movement** in grid spaces. No Actor data path is required.
+- **D&D5e**: movement speeds are detected automatically from the current D&D5e schema, with legacy schema support.
+- **Custom Actor Data Path**: enter the Actor dot-path that contains the numeric movement value.
 
--   **D&D 5E**
-    `system.attributes.movement.walk`
+The invalid movement-path warning is only relevant to the Custom Actor Data Path profile.
 
--   **Pathfinder 2E**
-    `system.attributes.speed.total`
-
-If your system stores speed elsewhere, you'll need to find where it's located and input the correct path into the settings.
 
 ---
 
@@ -368,12 +377,12 @@ If you want to use any Google Font for your distance labels, follow these steps:
     ```
 4.  **Paste into your module settings**
 
-    -   Go to Module Settings → Aeris Tokens → CSS @import for your font.
+    -   Go to Module Settings → Token Walk Animation → CSS @import for your font.
     -   Replace the default import with the line you copied above.
 
 5.  **Set the font-family name**
 
-    -   In Module Settings → Aeris Tokens → Font-Family name, enter the exact font name as shown on Google Fonts (e.g. Dancing Script).
+    -   In Module Settings → Token Walk Animation → Font-Family name, enter the exact font name as shown on Google Fonts (e.g. Dancing Script).
 
 Foundry will then fetch the new font and rebake it for you.
 If the font fails to load, you’ll see a warning and it will fall back to either the default (Cal Sans) or your system default.

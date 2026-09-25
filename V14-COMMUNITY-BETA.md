@@ -1,4 +1,4 @@
-# Token Walk Animation — Foundry VTT v14 Community Beta 5
+# Token Walk Animation — Foundry VTT v14 Community Beta 6
 
 This is an **unofficial compatibility build** prepared from the original MIT-licensed Aeris Tokens source. It is not an official release by the original author.
 
@@ -44,3 +44,10 @@ After reproducing an error, press F12, open Console, and copy the first red stac
 - Keeps compatibility with older D&D5e movement fields.
 - Migrates the old default movement path automatically where appropriate.
 - Avoids false invalid-path warnings for unavailable movement actions.
+
+## Beta 6 system profiles
+
+- Added Auto-detect, System Agnostic, D&D 5e, Legend in the Mist / Mist Engine, and Custom Actor Data Path integration modes.
+- LitM/Mist Engine uses a configurable movement budget in grid spaces instead of looking for a D&D-style Actor speed statistic.
+- Known LitM system IDs are auto-detected, including the current official `mist-engine-fvtt` and `litmv2`.
+- The movement data-path warning is only used by the Custom Actor Data Path profile.

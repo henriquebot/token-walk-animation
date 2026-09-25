@@ -15,12 +15,14 @@ import { registerMovementMultiplier } from "./movementMultiplier";
 import { registerMovementSpecificAnimationsSetting } from "./movementAnimations";
 import { registerMovementDataPathSetting } from "./movementPropertyPath";
 import { registerTokenMoveSpeedSetting } from "./tokenSpeed";
+import { registerSystemIntegrationSettings } from "./systemIntegration";
 import { registerUncapExplorationSetting } from "./uncapExploration";
 import { registerWorldFont } from "./worldFont";
 
 // TODO CLEAN UP SETTING CATEGORIES
 export function registerSettings() {
 	registerMovementBehaviourSetting();
+	registerSystemIntegrationSettings();
 	registerUncapExplorationSetting();
 	registerMovementDataPathSetting();
 	registerGridMovementSoundSetting();

@@ -1,3 +1,12 @@
+# 14.0.0-beta.6 — System integration profiles
+
+- Added a **System Integration** setting with Auto-detect, System Agnostic, D&D 5e, Legend in the Mist / Mist Engine, and Custom Actor Data Path profiles.
+- Auto-detect recognizes the current official LitM system (`mist-engine-fvtt`), `litmv2`, the archived `litm` system, and common community LitM system IDs.
+- LitM/System Agnostic profiles no longer look for D&D-style Actor speed fields and therefore do not show the invalid movement-path warning.
+- Added **Agnostic / LitM Base Movement**, expressed in grid spaces (default 6).
+- D&D5e keeps per-Actor walk/fly/swim/climb/burrow speed integration.
+- Custom Actor Data Path remains available for other systems that expose a numeric movement property.
+
 # 14.0.0-beta.5 — D&D5e movement schema fix
 
 - Added native support for the current D&D5e movement schema at `system.attributes.movement.speeds.*`.

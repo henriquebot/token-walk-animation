@@ -1,4 +1,5 @@
 import { callGetMovementModes } from "../../api/getMovementModes";
+import { getSystemIntegrationProfile } from "../../settings/systemIntegration";
 import { getMovementValue } from "../../utils/movement";
 
 export class MovementDataProvider {
@@ -18,6 +19,10 @@ export class MovementDataProvider {
                     "walk",
             ])
         );
+
+        // Some systems expose no selectable movement actions at all. Walk is
+        // always a safe baseline for the agnostic/LitM profiles.
+        if (!use.length) use.push("walk");
 
         return use
             .map((mode) => ({ mode, ranges: getMovementValue(actor, mode) }))
@@ -52,6 +57,14 @@ function getSelectableCoreMovementModes(
 }
 
 function getActorMovementModes(actor: Actor): MovementMode[] {
+    const profile = getSystemIntegrationProfile();
+
+    // LitM and System Agnostic intentionally do not inspect actor data for
+    // movement. Movement modes still come from Foundry's Token actions/hooks.
+    if (profile === "litm" || profile === "agnostic") return [];
+
+    if (profile !== "dnd5e" && profile !== "custom") return [];
+
     const movement = foundry.utils.getProperty(
         actor,
         "system.attributes.movement"
@@ -82,10 +95,10 @@ function getActorMovementModes(actor: Actor): MovementMode[] {
         }
     };
 
-    // D&D5e 6.x.
-    addNumericModes((movement as any).speeds);
+    if (profile === "dnd5e") {
+        addNumericModes((movement as any).speeds);
+    }
 
-    // Older D&D5e and systems which store movement modes directly.
     addNumericModes(movement);
 
     return Array.from(modes);

@@ -3,7 +3,6 @@ import { MODULE_ID } from "../constants";
 export const PATH_WALK = "movementDataPathSetting";
 const LEGACY_DND5E_MOVEMENT_PATH = "system.attributes.movement.walk";
 const MODERN_DND5E_MOVEMENT_PATH = "system.attributes.movement.speeds.walk";
-const DEFAULT_MOVEMENT_PATH = LEGACY_DND5E_MOVEMENT_PATH;
 
 const defaultPathsWalk = {
     dnd5e: MODERN_DND5E_MOVEMENT_PATH,
@@ -12,17 +11,17 @@ const defaultPathsWalk = {
 
 export function getDefaultPath(): string {
     const systemId = (game.system?.id ?? "") as keyof typeof defaultPathsWalk;
-    return defaultPathsWalk[systemId] ?? DEFAULT_MOVEMENT_PATH;
+    return defaultPathsWalk[systemId] ?? "";
 }
 
 export function registerMovementDataPathSetting() {
     const actorTypes = Actor.implementation.TYPES.filter((t) => t !== "base");
 
     actorTypes.forEach((a) => {
-        //@ts-expect-error untyped;
+        //@ts-expect-error untyped
         game.settings?.register(MODULE_ID, `${PATH_WALK}.${a}`, {
-            name: `Movement Property Path (${a})`,
-            hint: `Data path to a ${a} actor’s movement property path. Alternatively, enter a number to use that as a flat override for all actors of this type.`,
+            name: `Custom Movement Property Path (${a})`,
+            hint: "Used only when System Integration is set to Custom Actor Data Path. Enter a dot-path to this actor type's movement value, or a number for a flat value.",
             scope: "world",
             config: true,
             default: getDefaultPath(),
@@ -43,7 +42,8 @@ export function getMovementSystemPath(
     if (
         game.system?.id === "dnd5e" &&
         stored === LEGACY_DND5E_MOVEMENT_PATH &&
-        foundry.utils.getProperty(actor, MODERN_DND5E_MOVEMENT_PATH) !== undefined
+        foundry.utils.getProperty(actor, MODERN_DND5E_MOVEMENT_PATH) !==
+            undefined
     ) {
         return MODERN_DND5E_MOVEMENT_PATH;
     }
@@ -61,7 +61,9 @@ export function getMovementSystemPath(
 export async function migrateDnd5eMovementDataPaths() {
     if (!game.user?.isGM || game.system?.id !== "dnd5e") return;
 
-    for (const actorType of Actor.implementation.TYPES.filter((t) => t !== "base")) {
+    for (const actorType of Actor.implementation.TYPES.filter(
+        (t) => t !== "base"
+    )) {
         const key = `${PATH_WALK}.${actorType}`;
         //@ts-expect-error untyped
         const stored = game.settings?.get(MODULE_ID, key);
@@ -70,11 +72,18 @@ export async function migrateDnd5eMovementDataPaths() {
         const hasModernActor = (game.actors ?? []).some(
             (actor) =>
                 actor.type === actorType &&
-                foundry.utils.getProperty(actor, MODERN_DND5E_MOVEMENT_PATH) !== undefined
+                foundry.utils.getProperty(
+                    actor,
+                    MODERN_DND5E_MOVEMENT_PATH
+                ) !== undefined
         );
 
         if (!hasModernActor) continue;
 
-        await game.settings?.set(MODULE_ID, key, MODERN_DND5E_MOVEMENT_PATH);
+        await game.settings?.set(
+            MODULE_ID,
+            key,
+            MODERN_DND5E_MOVEMENT_PATH
+        );
     }
 }
