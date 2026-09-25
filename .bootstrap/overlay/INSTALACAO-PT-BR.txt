@@ -1,0 +1,19 @@
+AERIS TOKENS — V14 COMMUNITY BETA 2
+
+1. Feche o Foundry VTT.
+2. Apague ou renomeie a pasta antiga Data/modules/aeris-tokens.
+3. Extraia este ZIP dentro de Data/modules.
+4. Confirme que existe Data/modules/aeris-tokens/module.json.
+5. Abra o Foundry e ative libWrapper, socketlib e Aeris Tokens.
+
+CORREÇÕES DESTA VERSÃO
+- O movimento gasto acumula entre vários arrastes no mesmo turno.
+- O modo escolhido no HUD é relido em cada novo arraste.
+- Velocidades de andar, voar, nadar, escalar e similares são detectadas automaticamente.
+- O histórico de movimento passa a ficar ligado por padrão.
+
+ANIMAÇÕES POR TIPO
+Em Configurações do Módulo, a opção "Experimental Movement-Specific Animations"
+fica DESLIGADA por padrão. Ative apenas depois de testar.
+
+Faça backup e teste primeiro em uma cópia do mundo.
