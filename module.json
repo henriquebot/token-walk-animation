@@ -1,54 +1,41 @@
 {
     "id": "aeris-tokens",
-    "title": "Aeris Tokens",
-    "description": "Overhauls how tokens move.",
-    "esmodules": ["main.bundle.js"],
+    "title": "Aeris Tokens — v14 Community Beta 2",
+    "description": "Unofficial Foundry VTT v14 compatibility build of Aeris Tokens with movement-mode support and persistent per-turn movement budgeting.",
+    "esmodules": [
+        "src/main.js"
+    ],
     "compatibility": {
-        "minimum": "13",
-        "verified": "13"
+        "minimum": "14",
+        "verified": "14.365",
+        "maximum": "14"
     },
-    "version": "VERSION_TAG",
+    "version": "14.0.0-beta.2",
     "authors": [
         {
             "name": "Robin Chand",
             "discord": "robxnlifts"
+        },
+        {
+            "name": "Unofficial v14 compatibility build",
+            "url": "https://gitlab.com/aeris-fvtt/aeris-tokens"
         }
     ],
-    "manifest": "https://aeris-fvtt.gitlab.io/aeris-tokens/v13/module.json",
-    "download": "https://gitlab.com/api/v4/projects/PROJECT_ID/packages/generic/ID_PLACEHOLDER/VERSION_TAG/ID_PLACEHOLDER-VERSION_TAG.zip",
     "relationships": {
         "requires": [
             {
-                "id": "aeris-core",
-                "type": "module",
-                "manifest": "https://aeris-fvtt.gitlab.io/aeris-core/v13/module.json"
-            },
-            {
                 "id": "socketlib",
                 "type": "module",
-                "compatibility": {}
+                "compatibility": {
+                    "minimum": "1.1.4"
+                }
             },
             {
                 "id": "lib-wrapper",
                 "type": "module",
-                "compatibility": {}
-            },
-            {
-                "id": "color-picker",
-                "type": "module",
                 "compatibility": {
-                    "minimum": "1.5"
+                    "minimum": "1.13.5.1"
                 }
-            }
-        ],
-        "recommends": [
-            {
-                "id": "aeris-cinematic-view",
-                "type": "module",
-                "compatibility": {
-                    "minimum": "v13.0.1"
-                },
-                "manifest": "https://aeris-fvtt.gitlab.io/aeris-cinematic-view/v13/module.json"
             }
         ]
     },
