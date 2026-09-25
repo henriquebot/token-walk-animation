@@ -14,6 +14,7 @@ import { patchTokenLayer } from "./patches/tokenLayer";
 import { regionIndexManager } from "./regionIndex/regionIndexManager";
 import { setupRegionIndexBuild } from "./regionIndex/setup";
 import { registerSettings } from "./settings/_registerSettings";
+import { migrateMovementHistoryDefault } from "./settings/movementHistory";
 import {
     setupWarmGridTravelCacheOnLogin,
     warmGridTravelCache,
@@ -78,12 +79,18 @@ Hooks.on("ready", () => {
     };
 });
 
-Hooks.on("ready", () => {
+Hooks.on("ready", async () => {
+    await migrateMovementHistoryDefault();
     warmGridTravelCache();
     setupWarmGridTravelCacheOnLogin();
     compatibilityCheck();
 });
 
 Hooks.on("ready", () => {
-    aerisCore.docs.registerDocsMenu("aeris-tokens");
+    // Aeris Core is optional in this community v14 compatibility build.
+    try {
+        (globalThis as any).aerisCore?.docs?.registerDocsMenu?.("aeris-tokens");
+    } catch (error) {
+        console.warn("Aeris Tokens | Aeris Core documentation menu unavailable", error);
+    }
 });
