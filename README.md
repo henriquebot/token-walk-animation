@@ -1,4 +1,5 @@
-<!-- docs:group:getting-started:start -->
+> [!IMPORTANT]
+> This GitHub repository is a community-maintained **Foundry VTT v14** compatibility fork of the original [Aeris Tokens](https://gitlab.com/aeris-fvtt/aeris-tokens) project. The original author and MIT license are preserved.\n>\n> **Foundry manifest:** https://github.com/henriquebot/token-walk-animation/releases/latest/download/module.json\n\n<!-- docs:group:getting-started:start -->
 
 # Aeris Tokens
 
@@ -259,7 +260,7 @@ token.dragActionHandler?.refreshMovement();
 
 ## Installation
 
-1. Copy the manifest URL: https://aeris-fvtt.gitlab.io/aeris-tokens/v13/module.json
+1. Copy the manifest URL: https://github.com/henriquebot/token-walk-animation/releases/latest/download/module.json
 2. Paste the manifest URL at the bottom of the install module interface in foundry. This can be found by:
     1. Opening FoundryVTT
     2. Navigating to the **"Add-On-Modules"** tab
@@ -272,7 +273,7 @@ token.dragActionHandler?.refreshMovement();
 
 ## Compatibility
 
--   **Foundry VTT**: Version 13
+-   **Foundry VTT**: Version 14 (community compatibility build)
 -   **Required Modules**:
 
     -   Aeris Core
