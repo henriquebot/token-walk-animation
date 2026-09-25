@@ -281,6 +281,14 @@ export function createAerisTokenClass(
                 if (lastAnchor) {
                     aerisToken.setQueuedPositionOffset(lastAnchor, true);
 
+                    const queuedTopLeft = aerisToken.queuedPositionTopLeft;
+                    if (queuedTopLeft) {
+                        aerisToken.zoomHandler.follow({
+                            x: queuedTopLeft.x + aerisToken.w / 2,
+                            y: queuedTopLeft.y + aerisToken.h / 2,
+                        });
+                    }
+
                     if (behaviour === "Exploration")
                         explorationBroadcastJumpTo(this.id!, lastAnchor);
                 }

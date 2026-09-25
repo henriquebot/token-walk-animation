@@ -1,4 +1,4 @@
-# Token Walk Animation — Foundry VTT v14 Community Beta 3
+# Token Walk Animation — Foundry VTT v14 Community Beta 4
 
 This is an **unofficial compatibility build** prepared from the original MIT-licensed Aeris Tokens source. It is not an official release by the original author.
 
@@ -30,3 +30,10 @@ This is an **unofficial compatibility build** prepared from the original MIT-lic
 ## Useful report
 
 After reproducing an error, press F12, open Console, and copy the first red stack trace mentioning `token-walk-animation`.
+
+## Beta 4 camera changes
+
+- Native Foundry v14 camera follow using `canvas.animatePan()`.
+- No Aeris Cinematic View requirement.
+- Current zoom is preserved while following the token.
+- Optional smooth camera movement with configurable catch-up duration.

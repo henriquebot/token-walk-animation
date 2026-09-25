@@ -4,24 +4,10 @@ import { SocketLib } from "./socketlib";
 declare global {
     var socketlib: SocketLib;
     var aerisCore: typeof aerisCoreApi;
-    var aerisCinema: {
-        panToTargetScaleViaTicker: (
-            mouseWorld: {
-                x: number;
-                y: number;
-            },
-            targetScale: number
-        ) => void;
-        panKeepEventViewportPosition: (
-            origin: { x: number; y: number },
-            paddedPositions: Vec4[]
-        ) => Promise<{ scale: number; pivot: { x: number; y: number } } | null>;
-    };
     interface GlobalThis {
         socketlib: SocketLib;
         tokenWalkAnimation?: unknown;
         aerisTokens?: unknown;
-        aerisCinema: typeof aerisCinema;
         aerisCore: typeof aerisCore;
     }
     interface Window {

@@ -1,3 +1,12 @@
+# 14.0.0-beta.4 — Native camera follow
+
+- Removed the runtime dependency on Aeris Cinematic View for camera movement.
+- Replaced Aeris camera calls with Foundry v14 `canvas.animatePan()`.
+- Camera follow now preserves the current zoom level instead of zooming out to fit the movement range.
+- Added **Follow Token Camera**, **Smooth Camera Movement**, and **Camera Follow Smoothing** client settings.
+- Added a camera dead-zone to avoid constantly pulling the viewport for tiny token movements.
+- Camera follows both drag previews and the final animated token movement.
+
 # 14.0.0-beta.3 — Token Walk Animation
 
 - Renamed the package ID from `aeris-tokens` to `token-walk-animation`.

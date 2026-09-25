@@ -9,6 +9,7 @@ import { registerEnableGridPaintingSetting } from "./gridRangeMap";
 import { registerGridMovementSoundSetting } from "./gridSound";
 import { registerScaleJumpFactorSetting } from "./jumpPercent";
 import { registerMoveCameraOnHoldSetting } from "./moveCameraOnHold";
+import { registerSmoothCameraMovementSettings } from "./smoothCameraMovement";
 import { registerEnableCombatMovementHistorySetting } from "./movementHistory";
 import { registerMovementMultiplier } from "./movementMultiplier";
 import { registerMovementSpecificAnimationsSetting } from "./movementAnimations";
@@ -33,6 +34,7 @@ export function registerSettings() {
 	registerWorldFont();
 	registerAutoPathSetting();
 	registerMoveCameraOnHoldSetting();
+	registerSmoothCameraMovementSettings();
 	registerCameraPanPaddingSetting();
 	registerEnableCombatMovementHistorySetting();
 	registerEnableGridPaintingSetting();

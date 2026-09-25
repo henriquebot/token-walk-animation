@@ -236,6 +236,7 @@ export class TokenJumpHandler {
                 }
 
                 this.syncPosition();
+                if (isCaller) this.token.zoomHandler.follow(this.token.center);
 
                 if (p === 1) {
                     mesh.position.set(endX, endY);
