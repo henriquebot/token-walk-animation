@@ -11,7 +11,6 @@ import {
 
 const README_URL = "https://github.com/henriquebot/token-walk-animation#troubleshooting";
 
-// scope here to only warn once per setting
 let warnedPath: string | null = null;
 
 const WALK_DERIVED_MODES = new Set([
@@ -27,6 +26,7 @@ const WALK_DERIVED_MODES = new Set([
 const MODE_ALIASES: Record<string, string> = {
     walking: "walk",
     ground: "walk",
+    speed: "walk",
     crouched: "crawl",
     agachado: "crawl",
     swimming: "swim",
@@ -60,15 +60,10 @@ export function getMovementValue(
     );
 
     if (typeof movementValue !== "number") {
-        // A valid base path with no value for this particular mode simply
-        // means the Actor cannot use that movement mode. Do not fabricate a
-        // six-space speed or warn about an otherwise-correct setting.
-        const configuredBaseValue =
-            typeof movementPathSetting === "string"
-                ? Number(foundry.utils.getProperty(actor, movementPathSetting))
-                : movementPathSetting;
-        if (Number.isFinite(configuredBaseValue) && configuredBaseValue > 0)
-            return [];
+        // If walking speed can be resolved, the configured schema is valid and
+        // this particular movement action simply is not available to the Actor.
+        const walkValue = resolveMovementValue(actor, movementPathSetting, "walk");
+        if (typeof walkValue === "number" && walkValue > 0) return [];
 
         if (warnedPath !== movementPathSetting) {
             warnedPath = movementPathSetting as string;
@@ -109,6 +104,44 @@ export function getMovementValue(
     return ranges;
 }
 
+function readNumericMovementValue(actor: Actor, path: string): number | undefined {
+    const value = foundry.utils.getProperty(actor, path);
+
+    if (typeof value === "object" && value !== null) {
+        const nested = Number((value as any).value);
+        if (Number.isFinite(nested) && nested > 0) return nested;
+    }
+
+    const numeric = Number(value);
+    return Number.isFinite(numeric) && numeric > 0 ? numeric : undefined;
+}
+
+function movementCandidates(
+    movementPathSetting: string,
+    normalMode: string
+): string[] {
+    const candidates: string[] = [];
+
+    if (normalMode === "walk") candidates.push(movementPathSetting);
+
+    if (/\.walk$/i.test(movementPathSetting)) {
+        candidates.push(movementPathSetting.replace(/\.walk$/i, `.${normalMode}`));
+    }
+
+    // D&D5e 6.x schema.
+    candidates.push(`system.attributes.movement.speeds.${normalMode}`);
+
+    // D&D5e <=5.x and other systems using the old flat movement object.
+    candidates.push(`system.attributes.movement.${normalMode}`);
+
+    if (normalMode === "walk") {
+        // Compatibility alias used by some D&D5e data/roll contexts.
+        candidates.push("system.attributes.movement.speed");
+    }
+
+    return Array.from(new Set(candidates));
+}
+
 function resolveMovementValue(
     actor: Actor,
     movementPathSetting: string | number,
@@ -117,36 +150,18 @@ function resolveMovementValue(
     if (typeof movementPathSetting === "number") return movementPathSetting;
     if (!movementPathSetting.length) return undefined;
 
-    const normalMode = MODE_ALIASES[rawMode.toLowerCase()] ?? rawMode.toLowerCase();
-    const candidates: string[] = [];
+    const normalMode =
+        MODE_ALIASES[rawMode.toLowerCase()] ?? rawMode.toLowerCase();
 
-    if (normalMode === "walk") candidates.push(movementPathSetting);
-
-    if (/\.walk$/i.test(movementPathSetting)) {
-        candidates.push(
-            movementPathSetting.replace(/\.walk$/i, `.${normalMode}`)
-        );
+    for (const path of movementCandidates(movementPathSetting, normalMode)) {
+        const numeric = readNumericMovementValue(actor, path);
+        if (numeric !== undefined) return numeric;
     }
 
-    candidates.push(`system.attributes.movement.${normalMode}`);
-
-    for (const path of Array.from(new Set(candidates))) {
-        const value = foundry.utils.getProperty(actor, path);
-        const numeric = Number(value);
-        if (Number.isFinite(numeric) && numeric > 0) return numeric;
-    }
-
-    // Modes such as crawling, climbing and swimming can be derived from walk
-    // speed by systems which represent their extra cost in the movement action.
     if (WALK_DERIVED_MODES.has(normalMode)) {
-        const walkCandidates = [
-            movementPathSetting,
-            "system.attributes.movement.walk",
-        ];
-        for (const path of Array.from(new Set(walkCandidates))) {
-            const value = foundry.utils.getProperty(actor, path);
-            const numeric = Number(value);
-            if (Number.isFinite(numeric) && numeric > 0) return numeric;
+        for (const path of movementCandidates(movementPathSetting, "walk")) {
+            const numeric = readNumericMovementValue(actor, path);
+            if (numeric !== undefined) return numeric;
         }
     }
 

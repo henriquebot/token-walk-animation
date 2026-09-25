@@ -15,6 +15,7 @@ import { patchTokenLayer } from "./patches/tokenLayer";
 import { regionIndexManager } from "./regionIndex/regionIndexManager";
 import { setupRegionIndexBuild } from "./regionIndex/setup";
 import { registerSettings } from "./settings/_registerSettings";
+import { migrateDnd5eMovementDataPaths } from "./settings/movementPropertyPath";
 import { migrateMovementHistoryDefault } from "./settings/movementHistory";
 import {
     setupWarmGridTravelCacheOnLogin,
@@ -85,6 +86,7 @@ Hooks.on("ready", () => {
 
 Hooks.on("ready", async () => {
     await migrateLegacyAerisNamespace();
+    await migrateDnd5eMovementDataPaths();
     await migrateMovementHistoryDefault();
     warmGridTravelCache();
     setupWarmGridTravelCacheOnLogin();

@@ -1,4 +1,4 @@
-# Token Walk Animation — Foundry VTT v14 Community Beta 4
+# Token Walk Animation — Foundry VTT v14 Community Beta 5
 
 This is an **unofficial compatibility build** prepared from the original MIT-licensed Aeris Tokens source. It is not an official release by the original author.
 
@@ -37,3 +37,10 @@ After reproducing an error, press F12, open Console, and copy the first red stac
 - No Aeris Cinematic View requirement.
 - Current zoom is preserved while following the token.
 - Optional smooth camera movement with configurable catch-up duration.
+
+## Beta 5 D&D5e movement schema
+
+- Supports current D&D5e `system.attributes.movement.speeds.walk/fly/swim/climb/burrow` fields.
+- Keeps compatibility with older D&D5e movement fields.
+- Migrates the old default movement path automatically where appropriate.
+- Avoids false invalid-path warnings for unavailable movement actions.

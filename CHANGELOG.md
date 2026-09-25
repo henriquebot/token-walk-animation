@@ -1,3 +1,11 @@
+# 14.0.0-beta.5 — D&D5e movement schema fix
+
+- Added native support for the current D&D5e movement schema at `system.attributes.movement.speeds.*`.
+- Preserved compatibility with the older `system.attributes.movement.*` schema.
+- Existing worlds using the old default movement path are migrated automatically when modern D&D5e actor data is detected.
+- Movement-mode discovery now reads both modern `movement.speeds` and legacy flat movement fields.
+- Unsupported movement modes no longer trigger a false "invalid data path" warning when walking speed is valid.
+
 # 14.0.0-beta.4 — Native camera follow
 
 - Removed the runtime dependency on Aeris Cinematic View for camera movement.

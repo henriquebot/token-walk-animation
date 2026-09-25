@@ -1,6 +1,6 @@
 {
     "name": "token-walk-animation",
-    "version": "14.0.0-beta.4",
+    "version": "14.0.0-beta.5",
     "description": "Token movement range, pathfinding, animation, movement modes, and per-turn budgeting for Foundry VTT v14.367+",
     "main": "index.js",
     "scripts": {

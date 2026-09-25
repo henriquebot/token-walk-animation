@@ -55,13 +55,38 @@ function getActorMovementModes(actor: Actor): MovementMode[] {
     const movement = foundry.utils.getProperty(
         actor,
         "system.attributes.movement"
-    );
+    ) as Record<string, unknown> | undefined;
     if (!movement || typeof movement !== "object") return [];
 
-    return Object.entries(movement as Record<string, unknown>)
-        .filter(([, value]) => {
-            const numeric = Number(value);
-            return Number.isFinite(numeric) && numeric > 0;
-        })
-        .map(([mode]) => mode as MovementMode);
+    const modes = new Set<MovementMode>();
+
+    const addNumericModes = (source: unknown) => {
+        if (!source || typeof source !== "object") return;
+        for (const [rawMode, value] of Object.entries(
+            source as Record<string, unknown>
+        )) {
+            const candidate =
+                typeof value === "object" && value !== null
+                    ? (value as any).value
+                    : value;
+            const numeric = Number(candidate);
+            if (!Number.isFinite(numeric) || numeric <= 0) continue;
+
+            const mode = rawMode === "speed" ? "walk" : rawMode;
+            if (
+                ["bonus", "multiplier", "units", "hover"].includes(mode)
+            )
+                continue;
+
+            modes.add(mode as MovementMode);
+        }
+    };
+
+    // D&D5e 6.x.
+    addNumericModes((movement as any).speeds);
+
+    // Older D&D5e and systems which store movement modes directly.
+    addNumericModes(movement);
+
+    return Array.from(modes);
 }
