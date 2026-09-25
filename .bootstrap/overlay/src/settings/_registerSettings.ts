@@ -1,0 +1,40 @@
+import { registerAllowPathBeyondRangeSetting } from "./allowOutOfGrid";
+import { registerAutoPathSetting } from "./autoPath";
+import { registerCameraPanPaddingSetting } from "./cameraPadding";
+import { registerMovementBehaviourSetting } from "./enableGrid";
+import { registerEnableOthersPreviewSetting } from "./enableOthersPreview";
+import { registerGridColorSettings } from "./gridColor";
+import { registerEnableDistanceLabelSettings } from "./gridDistance";
+import { registerEnableGridPaintingSetting } from "./gridRangeMap";
+import { registerGridMovementSoundSetting } from "./gridSound";
+import { registerScaleJumpFactorSetting } from "./jumpPercent";
+import { registerMoveCameraOnHoldSetting } from "./moveCameraOnHold";
+import { registerEnableCombatMovementHistorySetting } from "./movementHistory";
+import { registerMovementMultiplier } from "./movementMultiplier";
+import { registerMovementSpecificAnimationsSetting } from "./movementAnimations";
+import { registerMovementDataPathSetting } from "./movementPropertyPath";
+import { registerTokenMoveSpeedSetting } from "./tokenSpeed";
+import { registerUncapExplorationSetting } from "./uncapExploration";
+import { registerWorldFont } from "./worldFont";
+
+// TODO CLEAN UP SETTING CATEGORIES
+export function registerSettings() {
+	registerMovementBehaviourSetting();
+	registerUncapExplorationSetting();
+	registerMovementDataPathSetting();
+	registerGridMovementSoundSetting();
+	registerEnableDistanceLabelSettings();
+	registerGridColorSettings();
+	registerMovementMultiplier();
+	registerScaleJumpFactorSetting();
+	registerMovementSpecificAnimationsSetting();
+	registerTokenMoveSpeedSetting();
+	registerAllowPathBeyondRangeSetting();
+	registerWorldFont();
+	registerAutoPathSetting();
+	registerMoveCameraOnHoldSetting();
+	registerCameraPanPaddingSetting();
+	registerEnableCombatMovementHistorySetting();
+	registerEnableGridPaintingSetting();
+	registerEnableOthersPreviewSetting();
+}
