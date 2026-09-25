@@ -1,0 +1,59 @@
+name: Build and publish Foundry module
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.6.1 --activate
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build Foundry v14 package
+        run: |
+          node scripts/build-v14.mjs . build-module
+          (cd build-module && zip -qr ../aeris-tokens.zip aeris-tokens)
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aeris-tokens-v14
+          path: |
+            aeris-tokens.zip
+            build-module/aeris-tokens/module.json
+
+      - name: Publish version release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v$VERSION"
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" aeris-tokens.zip build-module/aeris-tokens/module.json --clobber
+          else
+            gh release create "$TAG" aeris-tokens.zip build-module/aeris-tokens/module.json \
+              --title "Aeris Tokens $VERSION — Foundry v14" \
+              --notes "Community-maintained Foundry VTT v14 compatibility build based on the original MIT-licensed Aeris Tokens project."
+          fi
