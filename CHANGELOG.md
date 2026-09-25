@@ -1,3 +1,11 @@
+# v14 Community Beta 2
+
+- Fixed movement budget accumulation across multiple drags in one combat turn.
+- Synced the Token HUD movement action at every drag start.
+- Added automatic Foundry v14 and actor movement-mode discovery.
+- Enabled movement history by default with a one-time beta migration.
+- Added optional experimental movement-specific animations setting.
+
 ## v13.0.19
 
 ### Fixed
