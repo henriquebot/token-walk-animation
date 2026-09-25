@@ -33,29 +33,42 @@ export const COLOR_FORMAT = "hexa";
 
 export let colorSettings: string[] = [];
 
+function hasColorPickerModule() {
+    return Boolean((game as any).colorPicker?.ColorPickerField);
+}
+
 function registerColorPickerSetting(
     key: ClientSettings.KeyFor<typeof MODULE_ID>,
     config: any
 ) {
+    const hasColorPicker = hasColorPickerModule();
     config = {
         ...config,
         scope: "client",
-        config: false,
-        type: new game.colorPicker!.ColorPickerField({ format: COLOR_FORMAT }),
+        // Fall back to a normal hexadecimal text field when Color Picker is
+        // unavailable or not yet compatible with the current Foundry version.
+        config: !hasColorPicker,
+        type: hasColorPicker
+            ? new (game as any).colorPicker.ColorPickerField({
+                  format: COLOR_FORMAT,
+              })
+            : String,
     };
     game.settings?.register(MODULE_ID, key, config);
     colorSettings.push(key);
 }
 
 export function registerGridColorSettings() {
-    game.settings?.registerMenu(MODULE_ID, COLOR_MENU, {
-        name: "Color Settings",
-        hint: "Color settings for the module.",
-        label: "Configure Color Settings",
-        icon: "fas fa-palette",
-        restricted: true,
-        type: ColorConfigMenu,
-    });
+    if (hasColorPickerModule()) {
+        game.settings?.registerMenu(MODULE_ID, COLOR_MENU, {
+            name: "Color Settings",
+            hint: "Color settings for the module.",
+            label: "Configure Color Settings",
+            icon: "fas fa-palette",
+            restricted: true,
+            type: ColorConfigMenu,
+        });
+    }
 
     registerColorPickerSetting(ACTIVE_PATH_COLOR, {
         name: "Grid Fill: Active Path",
