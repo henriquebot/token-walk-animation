@@ -1,0 +1,43 @@
+{
+    "id": "aeris-tokens",
+    "title": "Aeris Tokens — v14 Community Beta 2",
+    "description": "Unofficial Foundry VTT v14 compatibility build of Aeris Tokens with movement-mode support and persistent per-turn movement budgeting.",
+    "esmodules": [
+        "src/main.js"
+    ],
+    "compatibility": {
+        "minimum": "14",
+        "verified": "14.365",
+        "maximum": "14"
+    },
+    "version": "14.0.0-beta.2",
+    "authors": [
+        {
+            "name": "Robin Chand",
+            "discord": "robxnlifts"
+        },
+        {
+            "name": "Unofficial v14 compatibility build",
+            "url": "https://gitlab.com/aeris-fvtt/aeris-tokens"
+        }
+    ],
+    "relationships": {
+        "requires": [
+            {
+                "id": "socketlib",
+                "type": "module",
+                "compatibility": {
+                    "minimum": "1.1.4"
+                }
+            },
+            {
+                "id": "lib-wrapper",
+                "type": "module",
+                "compatibility": {
+                    "minimum": "1.13.5.1"
+                }
+            }
+        ]
+    },
+    "socket": true
+}
