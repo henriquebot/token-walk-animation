@@ -1,4 +1,4 @@
-# Token Walk Animation — Foundry VTT v14 Community Beta 12
+# Token Walk Animation — Foundry VTT v14 Community Beta 13
 
 This is an **unofficial compatibility build** prepared from the original MIT-licensed Aeris Tokens source. It is not an official release by the original author.
 
@@ -93,3 +93,8 @@ After reproducing an error, press F12, open Console, and copy the first red stac
 - Added compatibility handling for Live Actors' canvas speech/viseme animator.
 - Live Actors caches token mesh X-scale while selected/animated; that cache can predate a later Token Walk Animation flip and restore the old facing when speech begins.
 - Token Walk Animation now keeps the horizontal sign synchronized while leaving Live Actors' bounce/viseme scale magnitude untouched.
+
+## Beta 13 Live Actors artwork handoff
+
+- Fixed Live Actors restoring a stale cached base texture after Token Walk Animation switches to Visual-Novel alternate art.
+- On texture source changes, the compatibility adapter now waits until Live Actors' own update hook completes, restores the TokenDocument's current artwork to the mesh, clears stale Live Actors caches, and lets Live Actors rediscover visemes from the new active image.

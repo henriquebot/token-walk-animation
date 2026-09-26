@@ -5,8 +5,12 @@
  * Its cached lerp state can predate a later horizontal facing flip, causing a
  * flipped token to appear unflipped as soon as speech/viseme animation starts.
  *
- * We intentionally synchronize only the SIGN of X scale. Live Actors remains
- * fully responsible for the magnitude used by bounce, stretch and viseme fitting.
+ * We synchronize two things:
+ * 1) the SIGN of X scale, so Live Actors cannot undo left/right facing; and
+ * 2) the current TokenDocument artwork after texture.src changes, so its
+ *    _originalTextures cache cannot restore a stale pre-Visual-Novel image.
+ *
+ * Live Actors remains fully responsible for bounce, stretch and viseme fitting.
  */
 let liveActorsAnimator: any = null;
 let tickerInstalled = false;
@@ -32,14 +36,29 @@ export async function setupLiveActorsCompatibility() {
             "updateToken",
             (document: TokenDocument, changes: Record<string, unknown>) => {
                 if (
-                    !foundry.utils.hasProperty(
+                    foundry.utils.hasProperty(
                         changes,
                         "texture.scaleX"
                     )
-                )
-                    return;
+                ) {
+                    syncLiveActorsFacing(document);
+                }
 
-                syncLiveActorsFacing(document);
+                if (
+                    foundry.utils.hasProperty(
+                        changes,
+                        "texture.src"
+                    )
+                ) {
+                    // Live Actors also listens to texture.src updates and clears
+                    // its caches. Its cleanup can restore the PREVIOUS cached
+                    // PIXI texture after Foundry has already updated the document.
+                    // Run one frame later so our canonical document art wins and
+                    // Live Actors can rebuild visemes from the new source.
+                    requestAnimationFrame(() => {
+                        void rebaseLiveActorsArtwork(document);
+                    });
+                }
             }
         );
 
@@ -68,6 +87,47 @@ export async function setupLiveActorsCompatibility() {
     } catch (error) {
         console.warn(
             "Token Walk Animation | Could not enable Live Actors facing compatibility.",
+            error
+        );
+    }
+}
+
+async function rebaseLiveActorsArtwork(document: TokenDocument) {
+    if (!liveActorsAnimator) return;
+
+    const token = document.object as any;
+    if (!token?.mesh) return;
+
+    const src = String((document.texture as any)?.src ?? "");
+    if (!src) return;
+
+    try {
+        // Drop stale references to whichever texture Live Actors previously
+        // considered "original". Its own updateToken hook normally clears these
+        // too, but doing it here after that hook guarantees the next speech cycle
+        // starts from the TokenDocument's CURRENT art.
+        liveActorsAnimator._originalTextures?.delete?.(document.id);
+        liveActorsAnimator._lerped?.delete?.(document.id);
+        liveActorsAnimator._tokenTextures?.delete?.(document.id);
+        liveActorsAnimator._texturePending?.delete?.(document.id);
+
+        const texture = await foundry.canvas.loadTexture(src);
+        if (texture?.valid && token.mesh) {
+            token.mesh.texture = texture;
+
+            // Re-run Foundry's own fit so the active TokenDocument scale and
+            // Dynamic Ring sizing are applied to the new artwork.
+            token._refreshMeshSizeAndScale?.();
+        }
+
+        syncLiveActorsFacing(document);
+
+        // If Live Actors is in a viseme-capable mode, let it rediscover assets
+        // using the NEW filename (including the visual-novel alternate art).
+        liveActorsAnimator.prepareToken?.(token);
+    } catch (error) {
+        console.warn(
+            "Token Walk Animation | Could not rebase Live Actors onto the current token artwork.",
             error
         );
     }

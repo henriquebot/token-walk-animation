@@ -1,3 +1,12 @@
+# 14.0.0-beta.13 — Live Actors artwork handoff fix
+
+- Fixed a second Live Actors conflict distinct from horizontal facing.
+- Live Actors caches the PIXI texture it considers the token's "original" artwork and restores that texture after speech/viseme animation.
+- When Token Walk Animation switches between map art and Visual-Novel art, the compatibility layer now rebases Live Actors onto the TokenDocument's current `texture.src` after Live Actors finishes its own update hook.
+- Stale Live Actors texture/lerp/viseme caches are cleared, Foundry refits the current artwork, and Live Actors is allowed to rediscover visemes using the new active filename.
+- This prevents an older map-token texture from being restored when speech begins or ends.
+- The beta.12 scale-sign synchronization remains in place.
+
 # 14.0.0-beta.12 — Live Actors facing compatibility
 
 - Added optional interoperability with **Live Actors** when both modules are active.
