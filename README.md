@@ -270,6 +270,12 @@ token.dragActionHandler?.refreshMovement();
 
 ---
 
+## WASD / Arrow-Key Animation
+
+Enable **Animate WASD / Arrow-Key Movement** to use Token Walk Animation's movement animation when moving controlled Tokens with WASD or the arrow keys. Foundry v14 reports these moves as the `keyboard` movement method, so this feature does not intercept unrelated key presses or API-driven Token updates.
+
+Repeated key presses queue each grid step, movement-specific animation styles use the Token's current movement action, and native camera follow can track the controlled Token while preserving zoom.
+
 ## Token HUD Visual-Novel Controls
 
 Enable **Token HUD Appearance Controls** to add three buttons to the **right column** of the Token HUD:

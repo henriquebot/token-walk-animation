@@ -1,3 +1,12 @@
+# 14.0.0-beta.8 — WASD / arrow-key animation
+
+- Added **Animate WASD / Arrow-Key Movement** client setting, enabled by default.
+- Foundry v14 keyboard movement (`method: "keyboard"`) now uses Token Walk Animation's jump/movement animation instead of teleporting between grid spaces.
+- Keyboard movement keeps Foundry's normal movement operation, collision constraints, and movement history; only the core visual animation/pan is replaced.
+- Repeated key presses queue individual grid-step animations instead of discarding intermediate steps.
+- Movement-specific animation styles also apply to keyboard movement based on the Token's current movement action.
+- Native camera follow can follow the controlled Token during keyboard animation without changing zoom.
+
 # 14.0.0-beta.7 — Token HUD visual-novel controls
 
 - Added three Token HUD controls in the **right column**: alternate art, increase visual scale, and decrease visual scale.

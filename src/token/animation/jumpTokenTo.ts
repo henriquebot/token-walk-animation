@@ -10,10 +10,18 @@ import { clamp } from "../../utils/clamp";
 import { easeOutQuint } from "../../utils/easings";
 import { isAutoRotateEnabled } from "../../utils/settings";
 import { sleep } from "../../utils/sleep";
-import { getTokenTopLeftFromAnchorOffset } from "../../utils/tiles";
+import {
+    getTokenTopLeftFromAnchorOffset,
+    getTopLeftTileFromToken,
+} from "../../utils/tiles";
 import { getGameInterfaceVolume } from "../../utils/volume";
 import { AerisToken } from "../aerisToken";
 import { CostOffset } from "../trail/costPath";
+
+type JumpPlaybackOptions = {
+    persistDocument?: boolean;
+    followCamera?: boolean;
+};
 
 export class TokenJumpHandler {
     private isJumping: boolean = false;
@@ -35,18 +43,77 @@ export class TokenJumpHandler {
     public async enqueueJumps(
         trail: CostOffset[],
         isCaller: boolean,
-        lastOnly: boolean
+        lastOnly: boolean,
+        playbackOptions: JumpPlaybackOptions = {}
     ) {
         const prepared = useMovementSpecificAnimations()
             ? compactTeleportSegments(trail)
             : trail;
         this.trailQueue.push(...prepared);
         if (!this.isJumping) {
-            await this.jumpLoop(isCaller, lastOnly);
+            await this.jumpLoop(isCaller, lastOnly, playbackOptions);
         }
     }
 
-    private async jumpLoop(isCaller: boolean, lastOnly: boolean) {
+    public async animateKeyboardMovement(
+        origin: { x: number; y: number },
+        destination: { x: number; y: number },
+        mode: MovementMode,
+        followCamera: boolean
+    ) {
+        const mesh = this.token.mesh;
+        if (!mesh) return;
+
+        const targetOffset = getTopLeftTileFromToken(
+            this.token,
+            destination
+        );
+
+        // When a new keyboard chain begins, Foundry has already committed the
+        // document at the destination. Put only the local rendered Token back
+        // at the movement origin so our jump animation can play forward.
+        // Repeated WASD presses are queued while the current jump is running.
+        if (!this.isJumping) {
+            const sizeX = canvas!.grid?.sizeX ?? 100;
+            const sizeY = canvas!.grid?.sizeY ?? 100;
+            const tokenW = Math.max(sizeX, this.token.w);
+            const tokenH = Math.max(sizeY, this.token.h);
+
+            mesh.position.set(
+                origin.x + tokenW / 2,
+                origin.y + tokenH / 2
+            );
+            this.token.x = origin.x;
+            this.token.y = origin.y;
+            this.token.document.x = origin.x;
+            this.token.document.y = origin.y;
+            this.token.initializeSources();
+        }
+
+        await this.enqueueJumps(
+            [
+                {
+                    ...targetOffset,
+                    cost: 0,
+                    parity: 0,
+                    mode,
+                    validRange: true,
+                },
+            ],
+            false,
+            false,
+            {
+                persistDocument: false,
+                followCamera,
+            }
+        );
+    }
+
+    private async jumpLoop(
+        isCaller: boolean,
+        lastOnly: boolean,
+        playbackOptions: JumpPlaybackOptions
+    ) {
         this.isJumping = true;
 
         this.baseScaleX = this.token.mesh?.scale._x ?? 1;
@@ -67,6 +134,7 @@ export class TokenJumpHandler {
 
                     await this.singleJump(last, isCaller, i, {
                         rotateTowardsDirection,
+                        ...playbackOptions,
                     });
                 } else {
                     if (isCaller && game.paused && !game.user?.isGM) break;
@@ -74,6 +142,7 @@ export class TokenJumpHandler {
 
                     await this.singleJump(next, isCaller, i++, {
                         rotateTowardsDirection,
+                        ...playbackOptions,
                     });
                 }
             }
@@ -95,6 +164,8 @@ export class TokenJumpHandler {
         i: number,
         options?: {
             rotateTowardsDirection?: boolean;
+            persistDocument?: boolean;
+            followCamera?: boolean;
         }
     ): Promise<boolean> {
         const mesh = this.token.mesh;
@@ -236,7 +307,8 @@ export class TokenJumpHandler {
                 }
 
                 this.syncPosition();
-                if (isCaller) this.token.zoomHandler.follow(this.token.center);
+                if (options?.followCamera ?? isCaller)
+                    this.token.zoomHandler.follow(this.token.center);
 
                 if (p === 1) {
                     mesh.position.set(endX, endY);
@@ -256,7 +328,7 @@ export class TokenJumpHandler {
                     canvas!.app?.ticker.remove(ticker);
 
                     (async () => {
-                        if (isCaller) {
+                        if (options?.persistDocument ?? isCaller) {
                             await this.token.document.update(
                                 {
                                     x: this.token.x,

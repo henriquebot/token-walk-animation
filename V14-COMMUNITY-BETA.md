@@ -1,4 +1,4 @@
-# Token Walk Animation — Foundry VTT v14 Community Beta 7
+# Token Walk Animation — Foundry VTT v14 Community Beta 8
 
 This is an **unofficial compatibility build** prepared from the original MIT-licensed Aeris Tokens source. It is not an official release by the original author.
 
@@ -59,3 +59,10 @@ After reproducing an error, press F12, open Console, and copy the first red stac
 - Map art and visual-novel art remember separate visual scales.
 - Scaling affects only token texture scale, not grid footprint, and can exceed 3x (default maximum 8x, configurable up to 20x).
 - Shift-click changes scale by 1.0 and right-click on a scale control resets the current form to 1x.
+
+## Beta 8 keyboard movement animation
+
+- WASD and arrow-key movement now use the same Token Walk Animation movement animation as mouse-driven movement.
+- The feature uses Foundry v14's keyboard movement method rather than listening to raw key presses.
+- Repeated keyboard movement queues each grid step and supports the currently selected movement action/style.
+- A client setting can disable the custom keyboard animation and restore Foundry's default behavior.

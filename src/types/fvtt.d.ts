@@ -118,6 +118,7 @@ declare module "fvtt-types/configuration" {
 		"token-walk-animation.enableTokenHudAppearanceControls": boolean;
 		"token-walk-animation.tokenArtScaleStep": number;
 		"token-walk-animation.tokenArtMaxScale": number;
+		"token-walk-animation.animateKeyboardMovement": boolean;
 	}
 	interface Storage {
 		"core.globalInterfaceVolume": number;
