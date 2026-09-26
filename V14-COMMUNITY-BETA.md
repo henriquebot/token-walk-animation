@@ -1,4 +1,4 @@
-# Token Walk Animation — Foundry VTT v14 Community Beta 10
+# Token Walk Animation — Foundry VTT v14 Community Beta 11
 
 This is an **unofficial compatibility build** prepared from the original MIT-licensed Aeris Tokens source. It is not an official release by the original author.
 
@@ -80,3 +80,10 @@ After reproducing an error, press F12, open Console, and copy the first red stac
 - Fixed the token shadow/ring reaching the keyboard destination before the artwork.
 - Foundry now owns the complete x/y animation for keyboard movement; Token Walk Animation only adds the movement-style visual overlay to the artwork.
 - This keeps shadow, dynamic ring, border and other token presentation synchronized while retaining the custom jump/movement feel.
+
+## Beta 11 keyboard speed and camera follow
+
+- WASD/arrow-key movement now uses the same Token Speed timing as mouse movement.
+- Corrected Foundry v14 animation options to the operation level instead of the per-token movement entry.
+- Keyboard movement explicitly starts native camera following and continuously tracks the controlled Token without the drag dead-zone.
+- Smooth camera timing and zoom preservation remain configurable with the existing camera settings.

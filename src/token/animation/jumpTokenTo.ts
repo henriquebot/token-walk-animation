@@ -96,6 +96,9 @@ export class TokenJumpHandler {
             desiredFacingScaleX,
             postAnimateAttached: previous?.postAnimateAttached ?? false,
         };
+
+        if (followCamera)
+            this.token.zoomHandler.startFollowing("keyboard");
     }
 
     public applyCoreKeyboardAnimation(context: Token.AnimationContext) {
@@ -185,13 +188,16 @@ export class TokenJumpHandler {
         mesh.alpha = state.baseAlpha * alphaMultiplier;
 
         if (state.followCamera)
-            this.token.zoomHandler.follow(this.token.center);
+            this.token.zoomHandler.follow(this.token.center, true);
     }
 
     private async finishCoreKeyboardAnimation() {
         const state = this.coreKeyboardAnimation;
         if (!state) return;
         this.coreKeyboardAnimation = null;
+
+        if (state.followCamera)
+            this.token.zoomHandler.stopFollowing("keyboard");
 
         const mesh = this.token.mesh;
         if (mesh) {

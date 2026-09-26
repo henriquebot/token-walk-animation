@@ -37,7 +37,17 @@ export function patchTokenLayer() {
             const [updates, options = {}] = result;
             if (!Array.isArray(updates)) return result;
 
-            const movement = (options.movement ??= {});
+            // These are operation-level animation options in Foundry v14.
+            // Keeping duration fixed here makes one keyboard grid step take
+            // exactly the same time as one mouse-driven Token Walk jump.
+            const duration = getTokenMoveSpeed() * 1000;
+            options.animate = true;
+            options.pan = false;
+            options.animation = {
+                ...(options.animation ?? {}),
+                duration,
+                linkToMovement: false,
+            };
 
             for (const update of updates) {
                 const id = String(update?._id ?? "");
@@ -56,19 +66,6 @@ export function patchTokenLayer() {
                     destinationY === originY
                 )
                     continue;
-
-                const entry = (movement[id] ??= {});
-
-                // Let Foundry animate the complete Token presentation. This is
-                // important in v14 because rings/shadows/markers are not all
-                // children of the PrimarySpriteMesh.
-                entry.animate = true;
-                entry.pan = false;
-                entry.animation = {
-                    ...(entry.animation ?? {}),
-                    duration: getTokenMoveSpeed() * 1000,
-                    linkToMovement: false,
-                };
 
                 token.jumpHandler.prepareCoreKeyboardAnimation(
                     { x: originX, y: originY },

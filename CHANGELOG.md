@@ -1,3 +1,12 @@
+# 14.0.0-beta.11 — Mouse/keyboard speed parity and continuous camera follow
+
+- Fixed WASD/arrow-key movement running noticeably faster than mouse movement.
+- Foundry v14 keyboard animation options are now written at the Token update-operation level, where core actually reads them.
+- One keyboard grid step now uses the same **Token Speed** duration as one mouse-driven movement step (default 0.5 seconds).
+- Keyboard camera follow now explicitly starts/stops a camera-follow session instead of calling follow while the camera handler was inactive.
+- WASD camera tracking bypasses the drag dead-zone and continuously follows the controlled Token while preserving the current zoom.
+- **Smooth Camera Movement** and **Camera Follow Smoothing** now apply during keyboard movement.
+
 # 14.0.0-beta.10 — Synchronized WASD rendering
 
 - Fixed the Token artwork and shadow/ring becoming visually separated during WASD/arrow-key movement.
