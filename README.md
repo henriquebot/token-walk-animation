@@ -295,7 +295,7 @@ Unlike modules which write `texture.scaleX = 1/-1`, Token Walk Animation preserv
 
 Enable **Animate WASD / Arrow-Key Movement** to use Token Walk Animation's movement animation when moving controlled Tokens with WASD or the arrow keys. Foundry v14 reports these moves as the `keyboard` movement method, so this feature does not intercept unrelated key presses or API-driven Token updates.
 
-Repeated key presses queue each grid step, movement-specific animation styles use the Token's current movement action, and native camera follow can track the controlled Token while preserving zoom.
+Repeated key presses queue each grid step, and movement-specific animation styles use the Token's current movement action.
 
 ## Token HUD Visual-Novel Controls
 
@@ -307,10 +307,6 @@ Enable **Token HUD Appearance Controls** to add three buttons to the **right col
 - Right-click either scale button to reset the currently displayed art to 1x.
 
 The normal map art and alternate visual-novel art keep **separate remembered scales**, so a token can stay at 1x on a tactical map while its portrait form remains at 4x, 6x, or another preferred scale. These controls do not change Token width/height or grid footprint. **Maximum Token Art Scale** defaults to 8x and can be configured up to 20x.
-
-## Native Camera Follow
-
-Token Walk Animation can follow the active token without Aeris Cinematic View. Enable **Follow Token Camera** to pan as the token approaches the edge of the viewport. **Smooth Camera Movement** preserves the current zoom while easing the camera toward the token; **Camera Follow Smoothing** controls the catch-up duration.
 
 ## System Integration Profiles
 
@@ -332,7 +328,7 @@ For LitM, leave **System Integration** on **Auto-detect** or explicitly choose *
     -   socketlib
     -   libWrapper
 
-Aeris Core, Color Picker, and Aeris Cinematic View are not required by this v14 community continuation. Token Walk Animation includes native camera follow and smoothing settings.
+Aeris Core, Color Picker, and Aeris Cinematic View are not required by this v14 community continuation.
 
 ---
 

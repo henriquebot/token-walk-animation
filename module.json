@@ -1,7 +1,7 @@
 {
     "id": "token-walk-animation",
     "title": "Token Walk Animation",
-    "description": "System-agnostic token movement with mouse/WASD animation, scale-preserving auto-facing, native camera follow, and visual-novel HUD controls for Foundry VTT v14.367+.",
+    "description": "System-agnostic token movement with mouse/WASD animation, scale-preserving auto-facing, and visual-novel HUD controls for Foundry VTT v14.367+.",
     "esmodules": [
         "src/main.js"
     ],
@@ -10,7 +10,7 @@
         "verified": "14.368",
         "maximum": "14"
     },
-    "version": "14.0.0-beta.13",
+    "version": "14.0.0-beta.14",
     "authors": [
         {
             "name": "Robin Chand",

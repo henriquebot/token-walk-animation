@@ -46,7 +46,6 @@ export function setupKeyboardMovementAnimation() {
                 (document.movementAction as MovementMode | null) ??
                     token.dragActionHandler.currentAction ??
                     "walk",
-                Boolean(isCaller && token.controlled),
                 isCaller
             );
         }

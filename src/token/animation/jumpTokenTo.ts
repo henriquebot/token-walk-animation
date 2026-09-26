@@ -25,7 +25,6 @@ import { CostOffset } from "../trail/costPath";
 type JumpPlaybackOptions = {
     persistDocument?: boolean;
     persistFacing?: boolean;
-    followCamera?: boolean;
 };
 
 type CoreKeyboardAnimationState = {
@@ -33,7 +32,6 @@ type CoreKeyboardAnimationState = {
     baseScaleX: number;
     baseScaleY: number;
     baseAlpha: number;
-    followCamera: boolean;
     persistFacing: boolean;
     desiredFacingScaleX: number | null;
     postAnimateAttached: boolean;
@@ -65,7 +63,6 @@ export class TokenJumpHandler {
         origin: { x: number; y: number },
         destination: { x: number; y: number },
         mode: MovementMode,
-        followCamera: boolean,
         persistFacing: boolean
     ) {
         const mesh = this.token.mesh;
@@ -91,14 +88,10 @@ export class TokenJumpHandler {
             baseScaleX,
             baseScaleY,
             baseAlpha,
-            followCamera,
             persistFacing,
             desiredFacingScaleX,
             postAnimateAttached: previous?.postAnimateAttached ?? false,
         };
-
-        if (followCamera)
-            this.token.zoomHandler.startFollowing("keyboard");
     }
 
     public applyCoreKeyboardAnimation(context: Token.AnimationContext) {
@@ -186,18 +179,12 @@ export class TokenJumpHandler {
             state.baseScaleY * scaleYMultiplier
         );
         mesh.alpha = state.baseAlpha * alphaMultiplier;
-
-        if (state.followCamera)
-            this.token.zoomHandler.follow(this.token.center, true);
     }
 
     private async finishCoreKeyboardAnimation() {
         const state = this.coreKeyboardAnimation;
         if (!state) return;
         this.coreKeyboardAnimation = null;
-
-        if (state.followCamera)
-            this.token.zoomHandler.stopFollowing("keyboard");
 
         const mesh = this.token.mesh;
         if (mesh) {
@@ -255,7 +242,6 @@ export class TokenJumpHandler {
         destination: { x: number; y: number },
         mode: MovementMode,
         isCaller: boolean,
-        followCamera: boolean
     ) {
         const mesh = this.token.mesh;
         if (!mesh) return;
@@ -301,8 +287,7 @@ export class TokenJumpHandler {
             {
                 persistDocument: false,
                 persistFacing: isCaller,
-                followCamera,
-            }
+                }
         );
     }
 
@@ -363,8 +348,7 @@ export class TokenJumpHandler {
             rotateTowardsDirection?: boolean;
             persistDocument?: boolean;
             persistFacing?: boolean;
-            followCamera?: boolean;
-        }
+                }
     ): Promise<boolean> {
         const mesh = this.token.mesh;
         if (!mesh) return Promise.resolve(false);
@@ -518,8 +502,6 @@ export class TokenJumpHandler {
                 }
 
                 this.syncPosition();
-                if (options?.followCamera ?? isCaller)
-                    this.token.zoomHandler.follow(this.token.center);
 
                 if (p === 1) {
                     mesh.position.set(endX, endY);

@@ -73,7 +73,6 @@ export function patchTokenLayer() {
                     (token.document.movementAction as MovementMode | null) ??
                         token.dragActionHandler.currentAction ??
                         "walk",
-                    Boolean(token.controlled),
                     true
                 );
             }

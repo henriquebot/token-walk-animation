@@ -1,6 +1,5 @@
 import { registerAllowPathBeyondRangeSetting } from "./allowOutOfGrid";
 import { registerAutoPathSetting } from "./autoPath";
-import { registerCameraPanPaddingSetting } from "./cameraPadding";
 import { registerMovementBehaviourSetting } from "./enableGrid";
 import { registerEnableOthersPreviewSetting } from "./enableOthersPreview";
 import { registerGridColorSettings } from "./gridColor";
@@ -9,8 +8,6 @@ import { registerEnableGridPaintingSetting } from "./gridRangeMap";
 import { registerGridMovementSoundSetting } from "./gridSound";
 import { registerScaleJumpFactorSetting } from "./jumpPercent";
 import { registerKeyboardMovementAnimationSetting } from "./keyboardMovement";
-import { registerMoveCameraOnHoldSetting } from "./moveCameraOnHold";
-import { registerSmoothCameraMovementSettings } from "./smoothCameraMovement";
 import { registerEnableCombatMovementHistorySetting } from "./movementHistory";
 import { registerMovementMultiplier } from "./movementMultiplier";
 import { registerMovementSpecificAnimationsSetting } from "./movementAnimations";
@@ -41,9 +38,6 @@ export function registerSettings() {
 	registerAllowPathBeyondRangeSetting();
 	registerWorldFont();
 	registerAutoPathSetting();
-	registerMoveCameraOnHoldSetting();
-	registerSmoothCameraMovementSettings();
-	registerCameraPanPaddingSetting();
 	registerEnableCombatMovementHistorySetting();
 	registerEnableGridPaintingSetting();
 	registerEnableOthersPreviewSetting();

@@ -25,7 +25,6 @@ import {
 import { tacticsBroadcastSetQueuedPositionOffset } from "./tactics";
 import { MovementPathTracker } from "./trail/BacktrableMovementTrail";
 import { CostOffset } from "./trail/costPath";
-import { TokenZoomHandler } from "./zoom/tokenZoomHandler";
 
 type DragStartState = {
     anchorOffset: Offset | null;
@@ -67,7 +66,6 @@ export function createAerisTokenClass(
         public gridPainter = new TokenGridPainter(this);
         public pathStateManager = new TokenPathStateManager(this);
         public jumpHandler = new TokenJumpHandler(this);
-        public zoomHandler = new TokenZoomHandler(this);
         public movementBudgetHandler = new MovementBudgetContext(this);
         public dragActionHandler = new DragActionHandler(this);
         public movementDataProvider = new MovementDataProvider();
@@ -178,7 +176,6 @@ export function createAerisTokenClass(
             });
             await this.updatePathAndPaint();
             this.gridPainter.paintAndBroadcast();
-            this.zoomHandler.zoomOut(this.center);
 
             if (behaviour === "Tactics") {
                 if (!game.user?.isGM && canSeeOthersPreview())
@@ -281,14 +278,6 @@ export function createAerisTokenClass(
                 if (lastAnchor) {
                     aerisToken.setQueuedPositionOffset(lastAnchor, true);
 
-                    const queuedTopLeft = aerisToken.queuedPositionTopLeft;
-                    if (queuedTopLeft) {
-                        aerisToken.zoomHandler.follow({
-                            x: queuedTopLeft.x + aerisToken.w / 2,
-                            y: queuedTopLeft.y + aerisToken.h / 2,
-                        });
-                    }
-
                     if (behaviour === "Exploration")
                         explorationBroadcastJumpTo(this.id!, lastAnchor);
                 }
@@ -338,7 +327,6 @@ export function createAerisTokenClass(
                         trail,
                         behaviour!
                     );
-                    this.zoomHandler.zoomBackIn();
 
                     if (isCombatMovementHistoryForTokenEnabled(aerisToken))
                         await aerisToken.movementBudgetHandler.set(

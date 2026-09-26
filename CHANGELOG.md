@@ -1,3 +1,11 @@
+# 14.0.0-beta.14 — Remove camera follow
+
+- Removed Token Walk Animation's custom camera-follow runtime from mouse and WASD/arrow-key movement.
+- Removed the **Follow Token Camera**, **Smooth Camera Movement**, and **Camera Follow Smoothing** client settings.
+- Removed the legacy camera-padding registration and the Token camera-follow handler.
+- WASD/arrow-key movement animation, movement styles, facing, and Token Speed timing remain enabled; only automatic viewport tracking was removed.
+- This prevents the camera jitter/stutter that could be visible to players while the viewport tried to follow an animated Token.
+
 # 14.0.0-beta.13 — Live Actors artwork handoff fix
 
 - Fixed a second Live Actors conflict distinct from horizontal facing.
