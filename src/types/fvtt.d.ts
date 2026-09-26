@@ -6,6 +6,7 @@ declare module "fvtt-types/configuration" {
 	interface FlagConfig {
 		Token: {
 			"token-walk-animation": {
+				baseFacing?: 1 | -1;
 				visualNovelAppearance?: {
 					alternateSrc?: string;
 					active?: boolean;
@@ -119,6 +120,7 @@ declare module "fvtt-types/configuration" {
 		"token-walk-animation.tokenArtScaleStep": number;
 		"token-walk-animation.tokenArtMaxScale": number;
 		"token-walk-animation.animateKeyboardMovement": boolean;
+		"token-walk-animation.autoFlipTokenFacing": boolean;
 	}
 	interface Storage {
 		"core.globalInterfaceVolume": number;

@@ -1,3 +1,14 @@
+# 14.0.0-beta.9 — Native scale-preserving token facing
+
+- Added **Auto Flip Token Facing**, a native replacement for the core behavior of Token Facing Flip.
+- Horizontal movement now mirrors artwork while preserving its absolute texture scale: e.g. `5x -> -5x` instead of resetting the art to `-1x`.
+- Auto-facing is integrated directly into Token Walk Animation's mouse and WASD/arrow-key animation path.
+- When auto-facing is enabled, directional token rotation is suppressed so illustrated tokens remain upright.
+- Added Ctrl+F manual horizontal flip and Ctrl+B base-facing toggle for selected tokens.
+- Base facing is stored per scene Token.
+- Added a compatibility warning when **Token Facing Flip** is active because both modules write `texture.scaleX` during movement.
+- Recommended setup: disable Token Facing Flip and enable **Auto Flip Token Facing** in Token Walk Animation.
+
 # 14.0.0-beta.8 — WASD / arrow-key animation
 
 - Added **Animate WASD / Arrow-Key Movement** client setting, enabled by default.

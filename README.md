@@ -270,6 +270,19 @@ token.dragActionHandler?.refreshMovement();
 
 ---
 
+## Automatic Token Facing
+
+Enable **Auto Flip Token Facing** to make illustrated tokens face the direction of horizontal movement without rotating them. Movement to the right uses the token's base facing; movement to the left mirrors it.
+
+Unlike modules which write `texture.scaleX = 1/-1`, Token Walk Animation preserves the existing magnitude. A Visual-Novel token at 5x therefore changes between `5x` and `-5x` instead of shrinking back to 1x.
+
+- **Ctrl+F**: manually flip selected token artwork horizontally.
+- **Ctrl+B**: toggle whether the selected artwork naturally/base-faces right or left.
+- Works with both mouse movement and WASD/arrow-key movement.
+- When auto-facing is enabled, movement rotation is suppressed so portrait-style artwork remains upright.
+
+**Token Facing Flip compatibility:** do not run both auto-facing systems together. Token Facing Flip and Token Walk Animation both write `texture.scaleX` during movement. Disable Token Facing Flip and use this native setting instead.
+
 ## WASD / Arrow-Key Animation
 
 Enable **Animate WASD / Arrow-Key Movement** to use Token Walk Animation's movement animation when moving controlled Tokens with WASD or the arrow keys. Foundry v14 reports these moves as the `keyboard` movement method, so this feature does not intercept unrelated key presses or API-driven Token updates.

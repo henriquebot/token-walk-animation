@@ -1,7 +1,7 @@
 {
     "name": "token-walk-animation",
-    "version": "14.0.0-beta.8",
-    "description": "System-agnostic token movement, mouse/WASD animation, camera follow, and Token HUD visual-novel controls for Foundry VTT v14.367+",
+    "version": "14.0.0-beta.9",
+    "description": "System-agnostic token movement, mouse/WASD animation, auto-facing flip, camera follow, and visual-novel HUD controls for Foundry VTT v14.367+",
     "main": "index.js",
     "scripts": {
         "lint": "eslint . --ext .ts,.js",

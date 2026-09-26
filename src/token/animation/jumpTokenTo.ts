@@ -5,6 +5,10 @@ import {
 import { getScaleJumpFactor } from "../../settings/jumpPercent";
 import { useMovementSpecificAnimations } from "../../settings/movementAnimations";
 import { getTokenMoveSpeed } from "../../settings/tokenSpeed";
+import {
+    getDesiredFacingScaleX,
+    isAutoTokenFacingEnabled,
+} from "../../settings/tokenFacing";
 import { revertRotation } from "../../utils/animateProperty";
 import { clamp } from "../../utils/clamp";
 import { easeOutQuint } from "../../utils/easings";
@@ -20,6 +24,7 @@ import { CostOffset } from "../trail/costPath";
 
 type JumpPlaybackOptions = {
     persistDocument?: boolean;
+    persistFacing?: boolean;
     followCamera?: boolean;
 };
 
@@ -59,6 +64,7 @@ export class TokenJumpHandler {
         origin: { x: number; y: number },
         destination: { x: number; y: number },
         mode: MovementMode,
+        isCaller: boolean,
         followCamera: boolean
     ) {
         const mesh = this.token.mesh;
@@ -104,6 +110,7 @@ export class TokenJumpHandler {
             false,
             {
                 persistDocument: false,
+                persistFacing: isCaller,
                 followCamera,
             }
         );
@@ -165,6 +172,7 @@ export class TokenJumpHandler {
         options?: {
             rotateTowardsDirection?: boolean;
             persistDocument?: boolean;
+            persistFacing?: boolean;
             followCamera?: boolean;
         }
     ): Promise<boolean> {
@@ -188,8 +196,21 @@ export class TokenJumpHandler {
         const movementStyle = useMovementSpecificAnimations()
             ? normalizeMovementStyle(pos.mode)
             : "walk";
+
+        const deltaX = endX - startX;
+        const desiredFacingScaleX = getDesiredFacingScaleX(
+            this.token.document,
+            deltaX
+        );
+        if (desiredFacingScaleX !== null) {
+            const sign = Math.sign(desiredFacingScaleX) || 1;
+            this.baseScaleX = Math.abs(this.baseScaleX || 1) * sign;
+        }
+
+        const autoFacing = isAutoTokenFacingEnabled();
         const canRotate =
             options?.rotateTowardsDirection &&
+            !autoFacing &&
             !["teleport", "burrow", "crawl"].includes(movementStyle);
 
         let targetRotation: number | null = null;
@@ -333,11 +354,16 @@ export class TokenJumpHandler {
                                 {
                                     x: this.token.x,
                                     y: this.token.y,
-                                    ...(isAutoRotateEnabled() && {
-                                        rotation:
-                                            (this.token.mesh?.rotation ?? 0) *
-                                            PIXI.RAD_TO_DEG,
+                                    ...(desiredFacingScaleX !== null && {
+                                        "texture.scaleX":
+                                            desiredFacingScaleX,
                                     }),
+                                    ...(isAutoRotateEnabled() &&
+                                        !autoFacing && {
+                                            rotation:
+                                                (this.token.mesh?.rotation ??
+                                                    0) * PIXI.RAD_TO_DEG,
+                                        }),
                                 },
                                 {
                                     //@ts-expect-error untyped
@@ -351,6 +377,26 @@ export class TokenJumpHandler {
                                 }
                             );
                             await sleep(20);
+                        } else if (
+                            (options?.persistFacing ?? isCaller) &&
+                            desiredFacingScaleX !== null &&
+                            Number(
+                                (this.token.document.texture as any)?.scaleX ??
+                                    1
+                            ) !== desiredFacingScaleX
+                        ) {
+                            await this.token.document.update(
+                                {
+                                    "texture.scaleX":
+                                        desiredFacingScaleX,
+                                },
+                                {
+                                    //@ts-expect-error custom module option
+                                    supressPaint: true,
+                                    animate: false,
+                                    pan: false,
+                                }
+                            );
                         }
 
                         resolve(true);

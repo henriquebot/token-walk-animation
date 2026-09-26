@@ -17,6 +17,7 @@ import { registerMovementSpecificAnimationsSetting } from "./movementAnimations"
 import { registerMovementDataPathSetting } from "./movementPropertyPath";
 import { registerTokenMoveSpeedSetting } from "./tokenSpeed";
 import { registerTokenHudAppearanceSettings } from "./tokenHudAppearance";
+import { registerTokenFacingSettings } from "./tokenFacing";
 import { registerSystemIntegrationSettings } from "./systemIntegration";
 import { registerUncapExplorationSetting } from "./uncapExploration";
 import { registerWorldFont } from "./worldFont";
@@ -36,6 +37,7 @@ export function registerSettings() {
 	registerMovementSpecificAnimationsSetting();
 	registerTokenMoveSpeedSetting();
 	registerTokenHudAppearanceSettings();
+	registerTokenFacingSettings();
 	registerAllowPathBeyondRangeSetting();
 	registerWorldFont();
 	registerAutoPathSetting();

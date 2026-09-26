@@ -39,6 +39,7 @@ export function setupKeyboardMovementAnimation() {
                 token.dragActionHandler.currentAction ??
                 "walk";
 
+            const isCaller = Boolean(user?.isSelf);
             await token.jumpHandler.animateKeyboardMovement(
                 {
                     x: Number(origin.x ?? token.x),
@@ -49,7 +50,8 @@ export function setupKeyboardMovementAnimation() {
                     y: Number(destination.y ?? token.y),
                 },
                 mode,
-                Boolean(user?.isSelf && token.controlled)
+                isCaller,
+                Boolean(isCaller && token.controlled)
             );
         }
     );

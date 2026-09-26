@@ -8,6 +8,13 @@ export function compatibilityCheck() {
         );
     }
 
+    if (game.modules?.get("token-facing-flip")?.active) {
+        ui.notifications?.warn(
+            `${MODULE_TITLE}: Token Facing Flip is active. Both modules can write texture.scaleX during movement, which can reset large/Visual-Novel art scales. Token Walk Animation now includes native auto-facing; disable Token Facing Flip and enable "Auto Flip Token Facing" here instead.`,
+            { permanent: true }
+        );
+    }
+
     if (game.modules?.get("terrainmapper")?.active) {
         ui.notifications?.warn(
             `${MODULE_TITLE} is currently incompatible with Terrain Mapper. Using them together will cause issues.`
