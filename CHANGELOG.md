@@ -1,3 +1,12 @@
+# 14.0.0-beta.10 — Synchronized WASD rendering
+
+- Fixed the Token artwork and shadow/ring becoming visually separated during WASD/arrow-key movement.
+- Foundry v14 now remains responsible for the complete keyboard movement position animation (mesh, shadow, dynamic ring, borders and markers).
+- Token Walk Animation decorates the core keyboard animation with jump/fly/swim/climb/burrow/crawl/teleport visuals instead of running a second competing position animation.
+- Corrected handling of `TokenLayer._prepareKeyboardMovementUpdates()`: Foundry v14 stores movement options per Token ID rather than directly on the movement record.
+- Camera follow and scale-preserving auto-facing remain integrated with keyboard movement.
+- Remote clients can decorate the same core movement when the `moveToken` hook is received.
+
 # 14.0.0-beta.9 — Native scale-preserving token facing
 
 - Added **Auto Flip Token Facing**, a native replacement for the core behavior of Token Facing Flip.

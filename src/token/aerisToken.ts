@@ -431,6 +431,14 @@ export function createAerisTokenClass(
             ];
         }
 
+        protected override _onAnimationUpdate(
+            changed: any,
+            context: Token.AnimationContext
+        ) {
+            super._onAnimationUpdate(changed, context);
+            this.jumpHandler.applyCoreKeyboardAnimation(context);
+        }
+
         protected override _onUpdate(
             changed: any,
             options: any,

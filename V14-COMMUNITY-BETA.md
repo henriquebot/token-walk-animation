@@ -1,4 +1,4 @@
-# Token Walk Animation — Foundry VTT v14 Community Beta 9
+# Token Walk Animation — Foundry VTT v14 Community Beta 10
 
 This is an **unofficial compatibility build** prepared from the original MIT-licensed Aeris Tokens source. It is not an official release by the original author.
 
@@ -74,3 +74,9 @@ After reproducing an error, press F12, open Console, and copy the first red stac
 - Mouse and keyboard movement use the same facing logic.
 - Ctrl+F manually flips selected tokens; Ctrl+B toggles the artwork's natural/base facing.
 - Disable the separate Token Facing Flip module when using this feature because both modules update texture.scaleX.
+
+## Beta 10 WASD render synchronization
+
+- Fixed the token shadow/ring reaching the keyboard destination before the artwork.
+- Foundry now owns the complete x/y animation for keyboard movement; Token Walk Animation only adds the movement-style visual overlay to the artwork.
+- This keeps shadow, dynamic ring, border and other token presentation synchronized while retaining the custom jump/movement feel.

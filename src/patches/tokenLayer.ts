@@ -1,4 +1,6 @@
 import { isKeyboardMovementAnimationEnabled } from "../settings/keyboardMovement";
+import { getTokenMoveSpeed } from "../settings/tokenSpeed";
+import { AerisToken } from "../token/aerisToken";
 
 export function patchTokenLayer() {
     libWrapper.register(
@@ -23,7 +25,7 @@ export function patchTokenLayer() {
         function (
             this: TokenLayer,
             wrapped,
-            objects,
+            objects: AerisToken[],
             dx,
             dy,
             dz
@@ -32,16 +34,52 @@ export function patchTokenLayer() {
             if (!isKeyboardMovementAnimationEnabled()) return result;
             if (!Array.isArray(result)) return result;
 
-            const updates = result[0];
-            const options = result[1] ?? {};
+            const [updates, options = {}] = result;
+            if (!Array.isArray(updates)) return result;
 
-            // Foundry v14 prepares keyboard moves as a bulk Scene update with
-            // Token movement options under the movement key. Disable only the
-            // core visual animation/pan; the database movement, constraints,
-            // history, and keyboard movement method are left intact.
-            options.movement ??= {};
-            options.movement.animate = false;
-            options.movement.pan = false;
+            const movement = (options.movement ??= {});
+
+            for (const update of updates) {
+                const id = String(update?._id ?? "");
+                if (!id) continue;
+
+                const token = objects.find((object) => object.id === id);
+                if (!token?.jumpHandler) continue;
+
+                const destinationX = Number(update.x ?? token.document.x);
+                const destinationY = Number(update.y ?? token.document.y);
+                const originX = Number(token.document.x);
+                const originY = Number(token.document.y);
+
+                if (
+                    destinationX === originX &&
+                    destinationY === originY
+                )
+                    continue;
+
+                const entry = (movement[id] ??= {});
+
+                // Let Foundry animate the complete Token presentation. This is
+                // important in v14 because rings/shadows/markers are not all
+                // children of the PrimarySpriteMesh.
+                entry.animate = true;
+                entry.pan = false;
+                entry.animation = {
+                    ...(entry.animation ?? {}),
+                    duration: getTokenMoveSpeed() * 1000,
+                    linkToMovement: false,
+                };
+
+                token.jumpHandler.prepareCoreKeyboardAnimation(
+                    { x: originX, y: originY },
+                    { x: destinationX, y: destinationY },
+                    (token.document.movementAction as MovementMode | null) ??
+                        token.dragActionHandler.currentAction ??
+                        "walk",
+                    Boolean(token.controlled),
+                    true
+                );
+            }
 
             return [updates, options];
         },

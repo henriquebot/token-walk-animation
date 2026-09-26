@@ -4,7 +4,7 @@ import { AerisToken } from "./aerisToken";
 export function setupKeyboardMovementAnimation() {
     Hooks.on(
         "moveToken",
-        async (
+        (
             document: TokenDocument,
             movement: any,
             _operation: any,
@@ -16,42 +16,38 @@ export function setupKeyboardMovementAnimation() {
             const token = document.object as AerisToken | null | undefined;
             if (!token?.mesh || token.isAerisDrag()) return;
 
+            // The initiating client prepares this state before the database
+            // update in TokenLayer._prepareKeyboardMovementUpdates. Other
+            // clients learn about the movement here and can decorate Foundry's
+            // own full-token movement animation too.
+            if (token.jumpHandler.hasCoreKeyboardAnimation()) return;
+
             const origin = movement?.origin;
             const destination = movement?.destination;
+            if (!origin || !destination) return;
+
+            const originX = Number(origin.x);
+            const originY = Number(origin.y);
+            const destinationX = Number(destination.x);
+            const destinationY = Number(destination.y);
             if (
-                !origin ||
-                !destination ||
-                (!Number.isFinite(origin.x) &&
-                    !Number.isFinite(origin.y)) ||
-                (!Number.isFinite(destination.x) &&
-                    !Number.isFinite(destination.y))
+                !Number.isFinite(originX) ||
+                !Number.isFinite(originY) ||
+                !Number.isFinite(destinationX) ||
+                !Number.isFinite(destinationY)
             )
                 return;
 
-            if (
-                Number(origin.x) === Number(destination.x) &&
-                Number(origin.y) === Number(destination.y)
-            )
-                return;
+            const isCaller = user?.id === game.userId;
 
-            const mode =
+            token.jumpHandler.prepareCoreKeyboardAnimation(
+                { x: originX, y: originY },
+                { x: destinationX, y: destinationY },
                 (document.movementAction as MovementMode | null) ??
-                token.dragActionHandler.currentAction ??
-                "walk";
-
-            const isCaller = Boolean(user?.isSelf);
-            await token.jumpHandler.animateKeyboardMovement(
-                {
-                    x: Number(origin.x ?? token.x),
-                    y: Number(origin.y ?? token.y),
-                },
-                {
-                    x: Number(destination.x ?? token.x),
-                    y: Number(destination.y ?? token.y),
-                },
-                mode,
-                isCaller,
-                Boolean(isCaller && token.controlled)
+                    token.dragActionHandler.currentAction ??
+                    "walk",
+                Boolean(isCaller && token.controlled),
+                isCaller
             );
         }
     );

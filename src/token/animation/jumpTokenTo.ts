@@ -28,6 +28,17 @@ type JumpPlaybackOptions = {
     followCamera?: boolean;
 };
 
+type CoreKeyboardAnimationState = {
+    mode: MovementMode;
+    baseScaleX: number;
+    baseScaleY: number;
+    baseAlpha: number;
+    followCamera: boolean;
+    persistFacing: boolean;
+    desiredFacingScaleX: number | null;
+    postAnimateAttached: boolean;
+};
+
 export class TokenJumpHandler {
     private isJumping: boolean = false;
     private lastX: number | null = null;
@@ -38,12 +49,185 @@ export class TokenJumpHandler {
     private trailQueue: CostOffset[] = [];
 
     private rotationOffset = 0;
+    private coreKeyboardAnimation: CoreKeyboardAnimationState | null = null;
 
     constructor(private token: AerisToken) {}
 
     private getRotationTarget() {
         return clamp(this.smoothedVx * 0.05, -Math.PI / 8, Math.PI / 8);
     }
+
+    public hasCoreKeyboardAnimation(): boolean {
+        return this.coreKeyboardAnimation !== null;
+    }
+
+    public prepareCoreKeyboardAnimation(
+        origin: { x: number; y: number },
+        destination: { x: number; y: number },
+        mode: MovementMode,
+        followCamera: boolean,
+        persistFacing: boolean
+    ) {
+        const mesh = this.token.mesh;
+        if (!mesh) return;
+
+        const previous = this.coreKeyboardAnimation;
+        const desiredFacingScaleX = getDesiredFacingScaleX(
+            this.token.document,
+            destination.x - origin.x
+        );
+
+        let baseScaleX = previous?.baseScaleX ?? mesh.scale.x;
+        const baseScaleY = previous?.baseScaleY ?? mesh.scale.y;
+        const baseAlpha = previous?.baseAlpha ?? mesh.alpha;
+
+        if (desiredFacingScaleX !== null) {
+            const sign = Math.sign(desiredFacingScaleX) || 1;
+            baseScaleX = Math.abs(baseScaleX || 1) * sign;
+        }
+
+        this.coreKeyboardAnimation = {
+            mode,
+            baseScaleX,
+            baseScaleY,
+            baseAlpha,
+            followCamera,
+            persistFacing,
+            desiredFacingScaleX,
+            postAnimateAttached: previous?.postAnimateAttached ?? false,
+        };
+    }
+
+    public applyCoreKeyboardAnimation(context: Token.AnimationContext) {
+        const state = this.coreKeyboardAnimation;
+        const mesh = this.token.mesh;
+        if (!state || !mesh) return;
+        if (context.name !== this.token.movementAnimationName) return;
+
+        if (!state.postAnimateAttached) {
+            state.postAnimateAttached = true;
+            context.postAnimate.push(() => {
+                void this.finishCoreKeyboardAnimation();
+            });
+        }
+
+        const duration = Math.max(Number(context.duration) || 1, 1);
+        const p = Math.min(
+            1,
+            Math.max(0, (Number(context.time) || 0) / duration)
+        );
+        const arc = Math.sin(Math.PI * p);
+        const movementStyle = useMovementSpecificAnimations()
+            ? normalizeMovementStyle(state.mode)
+            : "walk";
+
+        let scaleXMultiplier = 1;
+        let scaleYMultiplier = 1;
+        let alphaMultiplier = 1;
+        let yOffset = 0;
+
+        const tokenH = Math.max(
+            canvas!.grid?.sizeY ?? 100,
+            this.token.h
+        );
+
+        switch (movementStyle) {
+            case "fly":
+                yOffset = -tokenH * 0.08 * arc;
+                scaleXMultiplier = 1 + 0.035 * arc;
+                scaleYMultiplier = 1 + 0.035 * arc;
+                break;
+            case "swim":
+                yOffset =
+                    tokenH * 0.035 * Math.sin(Math.PI * 2 * p);
+                scaleXMultiplier = 1 + 0.025 * arc;
+                scaleYMultiplier = 1 - 0.025 * arc;
+                break;
+            case "climb":
+                scaleXMultiplier = 1 - 0.025 * arc;
+                scaleYMultiplier = 1 + 0.045 * arc;
+                break;
+            case "burrow":
+                scaleXMultiplier = 1 - 0.35 * arc;
+                scaleYMultiplier = 1 - 0.35 * arc;
+                alphaMultiplier = 1 - 0.55 * arc;
+                break;
+            case "crawl":
+                scaleXMultiplier = 1 + 0.04 * arc;
+                scaleYMultiplier = 1 - 0.2 * arc;
+                break;
+            case "teleport":
+                alphaMultiplier =
+                    p < 0.5 ? 1 - p * 2 : (p - 0.5) * 2;
+                scaleXMultiplier =
+                    p < 0.5
+                        ? 1 - 0.25 * p * 2
+                        : 0.75 + 0.25 * (p - 0.5) * 2;
+                scaleYMultiplier = scaleXMultiplier;
+                break;
+            default: {
+                const jumpScale =
+                    1 + (getScaleJumpFactor() - 1) * arc;
+                scaleXMultiplier = jumpScale;
+                scaleYMultiplier = jumpScale;
+                break;
+            }
+        }
+
+        // Core v14 owns x/y movement for keyboard input. We only decorate the
+        // PrimarySpriteMesh, so rings, shadows, borders and other Token
+        // presentation all remain synchronized with the core movement.
+        mesh.position.y += yOffset;
+        mesh.scale.set(
+            state.baseScaleX * scaleXMultiplier,
+            state.baseScaleY * scaleYMultiplier
+        );
+        mesh.alpha = state.baseAlpha * alphaMultiplier;
+
+        if (state.followCamera)
+            this.token.zoomHandler.follow(this.token.center);
+    }
+
+    private async finishCoreKeyboardAnimation() {
+        const state = this.coreKeyboardAnimation;
+        if (!state) return;
+        this.coreKeyboardAnimation = null;
+
+        const mesh = this.token.mesh;
+        if (mesh) {
+            mesh.scale.set(state.baseScaleX, state.baseScaleY);
+            mesh.alpha = state.baseAlpha;
+        }
+
+        if (
+            state.persistFacing &&
+            state.desiredFacingScaleX !== null
+        ) {
+            const current = Number(
+                (this.token.document.texture as any)?.scaleX ?? 1
+            );
+            const magnitude =
+                Number.isFinite(current) && current !== 0
+                    ? Math.abs(current)
+                    : Math.abs(state.desiredFacingScaleX);
+            const desired =
+                magnitude *
+                (Math.sign(state.desiredFacingScaleX) || 1);
+
+            if (current !== desired) {
+                await this.token.document.update(
+                    { "texture.scaleX": desired },
+                    {
+                        //@ts-expect-error custom module option
+                        supressPaint: true,
+                        animate: false,
+                        pan: false,
+                    }
+                );
+            }
+        }
+    }
+
 
     public async enqueueJumps(
         trail: CostOffset[],
