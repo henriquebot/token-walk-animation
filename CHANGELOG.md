@@ -1,3 +1,10 @@
+# 14.0.0-beta.15 — Live Actors camera controls compatibility
+
+- Added a Live Actors compatibility fix for its client-scoped `videoCleanControls` setting.
+- Live Actors defaults that setting to enabled, which hides the camera/audio control buttons after the UI finishes loading.
+- When both modules are active, Token Walk Animation now sets `live-actors.videoCleanControls` to `false` on each client and removes any stale `lva-clean-controls` class immediately.
+- This applies independently in every player's browser, so players keep their camera/audio controls visible without modifying the Live Actors repository.
+
 # 14.0.0-beta.14 — Remove camera follow
 
 - Removed Token Walk Animation's custom camera-follow runtime from mouse and WASD/arrow-key movement.

@@ -5,10 +5,13 @@
  * Its cached lerp state can predate a later horizontal facing flip, causing a
  * flipped token to appear unflipped as soon as speech/viseme animation starts.
  *
- * We synchronize two things:
- * 1) the SIGN of X scale, so Live Actors cannot undo left/right facing; and
+ * We synchronize three things:
+ * 1) the SIGN of X scale, so Live Actors cannot undo left/right facing;
  * 2) the current TokenDocument artwork after texture.src changes, so its
- *    _originalTextures cache cannot restore a stale pre-Visual-Novel image.
+ *    _originalTextures cache cannot restore a stale pre-Visual-Novel image; and
+ * 3) Live Actors' client-side camera controls setting, which defaults to hidden
+ *    controls. Token Walk Animation keeps the Foundry camera/audio controls
+ *    visible for every client that has both modules active.
  *
  * Live Actors remains fully responsible for bounce, stretch and viseme fitting.
  */
@@ -17,6 +20,8 @@ let tickerInstalled = false;
 
 export async function setupLiveActorsCompatibility() {
     if (!game.modules?.get("live-actors")?.active) return;
+
+    await ensureLiveActorsCameraControlsVisible();
 
     try {
         const route = foundry.utils.getRoute(
@@ -87,6 +92,47 @@ export async function setupLiveActorsCompatibility() {
     } catch (error) {
         console.warn(
             "Token Walk Animation | Could not enable Live Actors facing compatibility.",
+            error
+        );
+    }
+}
+
+
+async function ensureLiveActorsCameraControlsVisible() {
+    try {
+        const settingKey = "videoCleanControls";
+        const current = game.settings?.get("live-actors", settingKey);
+
+        if (current !== false) {
+            await game.settings?.set("live-actors", settingKey, false);
+        }
+
+        // Live Actors applies this class to the dock and individual camera tiles
+        // when its "Hide Controls" option is enabled. Remove any stale copy
+        // immediately as well, so players do not need another reload.
+        const clearCleanControlsClass = () => {
+            document
+                .querySelectorAll(
+                    "#camera-views.lva-clean-controls, " +
+                        ".camera-view.lva-clean-controls, " +
+                        '[id^="camera-view-"].lva-clean-controls'
+                )
+                .forEach((element) =>
+                    element.classList.remove("lva-clean-controls")
+                );
+        };
+
+        clearCleanControlsClass();
+        requestAnimationFrame(clearCleanControlsClass);
+
+        if (current !== false) {
+            console.info(
+                "Token Walk Animation | Live Actors camera/audio controls forced visible for this client."
+            );
+        }
+    } catch (error) {
+        console.warn(
+            "Token Walk Animation | Could not force Live Actors camera/audio controls visible.",
             error
         );
     }

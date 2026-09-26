@@ -272,9 +272,11 @@ token.dragActionHandler?.refreshMovement();
 
 ## Live Actors Compatibility
 
-When **Live Actors** is active, Token Walk Animation automatically enables a small compatibility adapter for canvas-token speech animation.
+When **Live Actors** is active, Token Walk Animation automatically enables a small compatibility adapter for canvas-token speech animation and camera controls.
 
 Live Actors animates `token.mesh.scale.x` during bounce and viseme playback and keeps its own cached base/original scales. If a Token is flipped after that cache was created, speech can otherwise restore the older facing. Token Walk Animation synchronizes only the horizontal sign with the Token's current `texture.scaleX`; Live Actors still controls the bounce/stretch/viseme magnitude.
+
+Live Actors also defaults its client-side `videoCleanControls` option to enabled. When both modules are active, Token Walk Animation forces that option off on each client so the Foundry camera/audio control buttons remain visible for players.
 
 This means a flipped Visual-Novel token can remain, for example, `-5x` facing while Live Actors temporarily animates its magnitude during speech instead of snapping back to the unflipped state.
 

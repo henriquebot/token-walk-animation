@@ -1,4 +1,4 @@
-# Token Walk Animation — Foundry VTT v14 Community Beta 14
+# Token Walk Animation — Foundry VTT v14 Community Beta 15
 
 This is an **unofficial compatibility build** prepared from the original MIT-licensed Aeris Tokens source. It is not an official release by the original author.
 
@@ -93,6 +93,12 @@ After reproducing an error, press F12, open Console, and copy the first red stac
 - Added compatibility handling for Live Actors' canvas speech/viseme animator.
 - Live Actors caches token mesh X-scale while selected/animated; that cache can predate a later Token Walk Animation flip and restore the old facing when speech begins.
 - Token Walk Animation now keeps the horizontal sign synchronized while leaving Live Actors' bounce/viseme scale magnitude untouched.
+
+## Beta 15 Live Actors camera controls
+
+- Live Actors registers `videoCleanControls` as a client setting and defaults it to enabled, which hides camera/audio controls after the interface finishes loading.
+- When both modules are active, Token Walk Animation now forces that setting off on each connected client.
+- Any stale `lva-clean-controls` class is removed immediately, so the fix takes effect without requiring players to manually open Live Actors settings.
 
 ## Beta 14 camera follow removal
 
