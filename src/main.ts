@@ -7,6 +7,7 @@ import { benchmarkLightPolygonComputation } from "./api/benchmark/benchmarkPolyg
 import { quickBenchmarkReachableTiles } from "./api/benchmark/benchmarkReachables";
 import { benchmarkVisionPolygon } from "./api/benchmark/benchmarkVisionPolygon";
 import { compatibilityCheck } from "./compatibility";
+import { setupLiveActorsCompatibility } from "./liveActorsCompatibility";
 import { migrateLegacyAerisNamespace } from "./migrateLegacyNamespace";
 import { LocalSweepPolygon } from "./localSweepPolygon";
 import { navGrid } from "./navGrid/navGrid";
@@ -95,6 +96,7 @@ Hooks.on("ready", async () => {
     warmGridTravelCache();
     setupWarmGridTravelCacheOnLogin();
     compatibilityCheck();
+    await setupLiveActorsCompatibility();
 });
 
 Hooks.on("ready", () => {

@@ -1,3 +1,12 @@
+# 14.0.0-beta.12 — Live Actors facing compatibility
+
+- Added optional interoperability with **Live Actors** when both modules are active.
+- Fixed Live Actors speech/viseme animation restoring a previously cached horizontal facing and visually unflipping a Token.
+- Token Walk Animation now synchronizes only the **sign** of Live Actors' X-scale caches (`origScaleX`, `baseScaleX`, `scaleX`, and `swapFitX`) with the Token document's current `texture.scaleX`.
+- Live Actors remains responsible for bounce/stretch/viseme scale magnitude; Token Walk Animation only preserves left/right facing.
+- A low-priority PIXI ticker reasserts the facing sign after Live Actors' own canvas animation tick, including held `-closed` viseme frames and Dynamic Token Ring refits.
+- No Live Actors database writes or settings are modified.
+
 # 14.0.0-beta.11 — Mouse/keyboard speed parity and continuous camera follow
 
 - Fixed WASD/arrow-key movement running noticeably faster than mouse movement.

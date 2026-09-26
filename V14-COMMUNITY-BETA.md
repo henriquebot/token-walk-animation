@@ -1,4 +1,4 @@
-# Token Walk Animation — Foundry VTT v14 Community Beta 11
+# Token Walk Animation — Foundry VTT v14 Community Beta 12
 
 This is an **unofficial compatibility build** prepared from the original MIT-licensed Aeris Tokens source. It is not an official release by the original author.
 
@@ -87,3 +87,9 @@ After reproducing an error, press F12, open Console, and copy the first red stac
 - Corrected Foundry v14 animation options to the operation level instead of the per-token movement entry.
 - Keyboard movement explicitly starts native camera following and continuously tracks the controlled Token without the drag dead-zone.
 - Smooth camera timing and zoom preservation remain configurable with the existing camera settings.
+
+## Beta 12 Live Actors compatibility
+
+- Added compatibility handling for Live Actors' canvas speech/viseme animator.
+- Live Actors caches token mesh X-scale while selected/animated; that cache can predate a later Token Walk Animation flip and restore the old facing when speech begins.
+- Token Walk Animation now keeps the horizontal sign synchronized while leaving Live Actors' bounce/viseme scale magnitude untouched.
