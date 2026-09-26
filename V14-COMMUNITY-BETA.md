@@ -1,4 +1,4 @@
-# Token Walk Animation — Foundry VTT v14 Community Beta 6
+# Token Walk Animation — Foundry VTT v14 Community Beta 7
 
 This is an **unofficial compatibility build** prepared from the original MIT-licensed Aeris Tokens source. It is not an official release by the original author.
 
@@ -51,3 +51,11 @@ After reproducing an error, press F12, open Console, and copy the first red stac
 - LitM/Mist Engine uses a configurable movement budget in grid spaces instead of looking for a D&D-style Actor speed statistic.
 - Known LitM system IDs are auto-detected, including the current official `mist-engine-fvtt` and `litmv2`.
 - The movement data-path warning is only used by the Custom Actor Data Path profile.
+
+## Beta 7 visual-novel Token HUD controls
+
+- Three new controls are placed in the Token HUD right column: alternate art, scale up, and scale down.
+- Alternate art is selected with Foundry's File Picker and is stored on the scene Token.
+- Map art and visual-novel art remember separate visual scales.
+- Scaling affects only token texture scale, not grid footprint, and can exceed 3x (default maximum 8x, configurable up to 20x).
+- Shift-click changes scale by 1.0 and right-click on a scale control resets the current form to 1x.

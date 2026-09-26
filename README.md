@@ -270,6 +270,17 @@ token.dragActionHandler?.refreshMovement();
 
 ---
 
+## Token HUD Visual-Novel Controls
+
+Enable **Token HUD Appearance Controls** to add three buttons to the **right column** of the Token HUD:
+
+- **Alternate Art** (masks icon): left-click toggles between the normal map token and a second image intended for portrait/visual-novel scenes. The first use opens Foundry's File Picker. Right-click the button to choose or replace the alternate image.
+- **Scale Up**: increases only the rendered token texture scale. Shift-click increases by 1.0.
+- **Scale Down**: decreases only the rendered token texture scale. Shift-click decreases by 1.0.
+- Right-click either scale button to reset the currently displayed art to 1x.
+
+The normal map art and alternate visual-novel art keep **separate remembered scales**, so a token can stay at 1x on a tactical map while its portrait form remains at 4x, 6x, or another preferred scale. These controls do not change Token width/height or grid footprint. **Maximum Token Art Scale** defaults to 8x and can be configured up to 20x.
+
 ## Native Camera Follow
 
 Token Walk Animation can follow the active token without Aeris Cinematic View. Enable **Follow Token Camera** to pan as the token approaches the edge of the viewport. **Smooth Camera Movement** preserves the current zoom while easing the camera toward the token; **Camera Follow Smoothing** controls the catch-up duration.

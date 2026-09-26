@@ -32,6 +32,7 @@ import {
     setupSupressCanvasPanWhileDragging,
     setupTokenHUDResetMovementBtn,
 } from "./token/setup";
+import { setupTokenHUDAppearanceControls } from "./token/hudAppearance";
 import { isLegalStep } from "./token/trail/isLegalStep";
 import { getRowsCol } from "./utils/rowsCols";
 import { getOccupiedTiles } from "./utils/tiles";
@@ -49,6 +50,7 @@ Hooks.once("init", () => {
     setupNavGridBuild();
     setupSupressCanvasPanWhileDragging();
     setupTokenHUDResetMovementBtn();
+    setupTokenHUDAppearanceControls();
     setupMovementHistory();
     bakeFont();
 });

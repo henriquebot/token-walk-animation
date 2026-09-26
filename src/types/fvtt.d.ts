@@ -4,6 +4,19 @@ import { CellRef } from "../wallIndex/wallIndexManager";
 
 declare module "fvtt-types/configuration" {
 	interface FlagConfig {
+		Token: {
+			"token-walk-animation": {
+				visualNovelAppearance?: {
+					alternateSrc?: string;
+					active?: boolean;
+					baseSrc?: string;
+					baseScaleX?: number;
+					baseScaleY?: number;
+					alternateScaleX?: number;
+					alternateScaleY?: number;
+				};
+			};
+		};
 		Actor: {
 			"token-walk-animation": {
 				distanceMoved: number;
@@ -102,6 +115,9 @@ declare module "fvtt-types/configuration" {
 		"token-walk-animation.autoPath": boolean;
 
 		"token-walk-animation.enableOthersPreview": boolean;
+		"token-walk-animation.enableTokenHudAppearanceControls": boolean;
+		"token-walk-animation.tokenArtScaleStep": number;
+		"token-walk-animation.tokenArtMaxScale": number;
 	}
 	interface Storage {
 		"core.globalInterfaceVolume": number;

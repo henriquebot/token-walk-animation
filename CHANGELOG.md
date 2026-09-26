@@ -1,3 +1,14 @@
+# 14.0.0-beta.7 — Token HUD visual-novel controls
+
+- Added three Token HUD controls in the **right column**: alternate art, increase visual scale, and decrease visual scale.
+- Left-click the alternate-art button to toggle between normal map art and a second visual-novel art image.
+- If no alternate image is configured yet, the first left-click opens Foundry's File Picker; right-click the button can be used later to replace the alternate image.
+- Normal map art and alternate visual-novel art remember **independent texture scales**.
+- Scale buttons change only `texture.scaleX/scaleY`; Token width/height and grid footprint are untouched.
+- Visual scale can exceed the standard Token configuration UI range, with a configurable maximum (default 8x, up to 20x).
+- Shift-click scale buttons changes scale by 1.0; right-click either scale button resets the currently displayed art to 1x.
+- Added a setting to disable the Token HUD appearance controls entirely.
+
 # 14.0.0-beta.6 — System integration profiles
 
 - Added a **System Integration** setting with Auto-detect, System Agnostic, D&D 5e, Legend in the Mist / Mist Engine, and Custom Actor Data Path profiles.
